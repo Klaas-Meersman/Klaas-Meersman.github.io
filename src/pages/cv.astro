@@ -1,0 +1,126 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../consts";
+
+// A lightweight web CV. Edit the arrays below. You can also drop a PDF at
+// public/cv.pdf and the download button will link to it.
+const education = [
+  {
+    when: "2024 – present",
+    what: "PhD in Engineering Science",
+    where: "Light & Lighting Laboratory, KU Leuven",
+  },
+  {
+    when: "2022 – 2024",
+    what: "MSc (your programme)",
+    where: "KU Leuven",
+  },
+];
+
+const experience = [
+  {
+    when: "2024 – present",
+    what: "Doctoral researcher",
+    where: "Light & Lighting Laboratory, KU Leuven",
+  },
+];
+
+const skills = [
+  "Lighting measurement",
+  "Data analysis (Python)",
+  "Scientific writing",
+  "Dutch (native)",
+  "English (fluent)",
+];
+---
+
+<BaseLayout title="CV" description="Curriculum vitae of Klaas Meersman.">
+  <div class="cv-head">
+    <h1>Curriculum Vitae</h1>
+    <!-- Put a PDF at public/cv.pdf to enable this link. -->
+    <a class="download" href="/cv.pdf">Download PDF ↓</a>
+  </div>
+  <p class="muted">
+    {SITE.name} · {SITE.role}, {SITE.affiliation}
+  </p>
+
+  <h2>Education</h2>
+  <ul class="timeline">
+    {
+      education.map((e) => (
+        <li>
+          <span class="when">{e.when}</span>
+          <span class="what">
+            <strong>{e.what}</strong>
+            <br />
+            <span class="muted">{e.where}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Experience</h2>
+  <ul class="timeline">
+    {
+      experience.map((e) => (
+        <li>
+          <span class="when">{e.when}</span>
+          <span class="what">
+            <strong>{e.what}</strong>
+            <br />
+            <span class="muted">{e.where}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Skills &amp; languages</h2>
+  <ul class="pill-row">
+    {skills.map((s) => <li class="tag">{s}</li>)}
+  </ul>
+</BaseLayout>
+
+<style>
+  .cv-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+  .download {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .download:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .when {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 540px) {
+    .timeline li {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+  }
+</style>

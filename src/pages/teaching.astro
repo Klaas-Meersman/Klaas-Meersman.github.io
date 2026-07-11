@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Edit this list. Delete the whole page (and its NAV entry in consts.ts) if you
+// don't teach.
+const teaching = [
+  {
+    role: "Teaching assistant",
+    course: "Course name (e.g. Lighting Technology)",
+    detail: "Programme · KU Leuven",
+    period: "2024 – present",
+  },
+  {
+    role: "Thesis supervision",
+    course: "Co-supervising MSc / BSc student projects",
+    detail: "Light & Lighting Laboratory",
+    period: "2025",
+  },
+];
+---
+
+<BaseLayout
+  title="Teaching"
+  description="Teaching and student supervision by Klaas Meersman."
+>
+  <h1>Teaching</h1>
+  <p class="lead">
+    Courses I help teach and students I (co-)supervise. Edit this in
+    <code>src/pages/teaching.astro</code>.
+  </p>
+
+  <ul class="teach-list">
+    {
+      teaching.map((t) => (
+        <li>
+          <strong>{t.role}</strong> — {t.course}
+          <div class="muted small">
+            {t.detail} · {t.period}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Interested in a thesis topic?</h2>
+  <p>
+    If you're a student looking for a thesis or internship in lighting, feel
+    free to <a href="/#find-me">get in touch</a> — describe what you'd like to
+    offer here.
+  </p>
+</BaseLayout>
+
+<style>
+  .teach-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .teach-list li {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .small {
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+import { SITE, LINKS } from "../consts";
+
+const year = new Date().getFullYear();
+
+// Only show links that have a value in consts.ts.
+const social = [
+  { label: "Email", href: LINKS.email },
+  { label: "Google Scholar", href: LINKS.googleScholar },
+  { label: "ORCID", href: LINKS.orcid },
+  { label: "GitHub", href: LINKS.github },
+  { label: "LinkedIn", href: LINKS.linkedin },
+  { label: "KU Leuven", href: LINKS.kuleuven },
+].filter((l) => l.href);
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <ul class="pill-row">
+      {
+        social.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              rel={l.href.startsWith("mailto:") ? undefined : "me noopener"}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="muted small">
+      © {year} {SITE.name} · {SITE.location} · Built with{" "}
+      <a href="https://astro.build">Astro</a>.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding-block: 2rem 3rem;
+    margin-top: 2rem;
+  }
+  .site-footer .pill-row {
+    margin-bottom: 0.75rem;
+  }
+  .site-footer a {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+  .site-footer a:hover {
+    color: var(--accent);
+  }
+  .small {
+    font-size: 0.85rem;
+  }
+</style>

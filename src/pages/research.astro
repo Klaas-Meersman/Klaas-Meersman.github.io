@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { projects } from "../data/projects";
+---
+
+<BaseLayout
+  title="Research"
+  description="Research projects and interests of Klaas Meersman."
+>
+  <h1>Research</h1>
+  <p class="lead">
+    A short overview of what I work on. Replace this intro in
+    <code>src/pages/research.astro</code>, and edit the project cards in
+    <code>src/data/projects.ts</code>.
+  </p>
+
+  {
+    projects.map((project) => (
+      <article class="card">
+        <h3>
+          {project.url ? <a href={project.url}>{project.title}</a> : project.title}
+        </h3>
+        {project.period && <p class="muted small">{project.period}</p>}
+        <p>{project.summary}</p>
+        {project.tags && project.tags.length > 0 && (
+          <ul class="pill-row">
+            {project.tags.map((t) => (
+              <li class="tag">{t}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .small {
+    font-size: 0.85rem;
+    margin: 0 0 0.5rem;
+  }
+</style>

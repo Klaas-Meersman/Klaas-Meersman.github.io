@@ -1,0 +1,22 @@
+{
+  "name": "Personal Website",
+  "build": { "dockerfile": "Dockerfile" },
+  "initializeCommand": "ssh-add -D || true",
+  "containerEnv": { "SSH_AUTH_SOCK": "" },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "astro-build.astro-vscode",
+        "svelte.svelte-vscode",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [4321],
+  "postCreateCommand": "npm install",
+  "postAttachCommand": "npm run dev -- --host",
+  "remoteUser": "node",
+  "runArgs": [
+    "-v", "${localWorkspaceFolder}:/mnt/selinux-relabel:Z"
+  ]
+}

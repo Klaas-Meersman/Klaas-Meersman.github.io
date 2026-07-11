@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE, LINKS } from "../consts";
+
+// Research interests shown as pills. Edit freely.
+const interests = [
+  "Light & lighting",
+  "Human-centric lighting",
+  "Non-visual effects of light",
+  "Lighting measurement & metrics",
+];
+
+const social = [
+  { label: "Email", href: LINKS.email },
+  { label: "Google Scholar", href: LINKS.googleScholar },
+  { label: "ORCID", href: LINKS.orcid },
+  { label: "GitHub", href: LINKS.github },
+  { label: "LinkedIn", href: LINKS.linkedin },
+].filter((l) => l.href);
+---
+
+<BaseLayout>
+  <section class="intro">
+    <div class="intro-text">
+      <h1>{SITE.name}</h1>
+      <p class="lead">
+        {SITE.role}, {SITE.affiliation}.
+      </p>
+      <p>
+        I'm a PhD researcher at the
+        <a href={LINKS.kuleuven || "https://www.mech.kuleuven.be/en/tme/research/energy-systems-integration-modeling/lighting"}
+          >Light &amp; Lighting Laboratory</a
+        >
+        at KU Leuven. <strong>Replace this paragraph</strong> with a short,
+        friendly introduction: what you study, the questions that drive you, and
+        what a visitor should know. Two or three sentences is plenty.
+      </p>
+      <p>
+        Feel free to reach out at
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+      </p>
+
+      <ul class="pill-row">
+        {interests.map((i) => <li class="tag">{i}</li>)}
+      </ul>
+    </div>
+
+    <aside class="intro-photo">
+      <!-- Drop a photo at public/profile.jpg and it will appear here.
+           Until then, this shows your initials. -->
+      <div class="avatar" aria-hidden="true">KM</div>
+      <p class="muted small">
+        Add a photo at <code>public/profile.jpg</code> and swap the block in
+        <code>src/pages/index.astro</code>.
+      </p>
+    </aside>
+  </section>
+
+  <h2>Currently</h2>
+  <ul class="now">
+    <li>
+      Pursuing my PhD at the Light &amp; Lighting Laboratory, KU Leuven — edit
+      these bullet points to say what you're working on right now.
+    </li>
+    <li>Reading and taking <a href="/notes">notes</a> on papers in my field.</li>
+    <li>Open to collaborations — get in touch.</li>
+  </ul>
+
+  {
+    social.length > 0 && (
+      <>
+        <h2>Find me</h2>
+        <ul class="pill-row">
+          {social.map((l) => (
+            <li>
+              <a class="link-pill" href={l.href}>
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .intro {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  .intro-photo {
+    text-align: center;
+    max-width: 12rem;
+  }
+  .avatar {
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    margin: 0 auto 0.6rem;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-serif);
+    font-size: 2.6rem;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+  }
+  .now {
+    padding-left: 1.1rem;
+  }
+  .now li {
+    margin-bottom: 0.4rem;
+  }
+  .link-pill {
+    display: inline-block;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  .link-pill:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+  .small {
+    font-size: 0.8rem;
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// Hide drafts, newest first.
+const notes = (await getCollection("notes"))
+  .filter((n) => !n.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+---
+
+<BaseLayout
+  title="Notes"
+  description="Reading notes and short writing by Klaas Meersman."
+>
+  <h1>Notes</h1>
+  <p class="lead">
+    Reading notes, summaries, and the occasional longer thought. To add one,
+    drop a Markdown file in <code>src/content/notes/</code>.
+  </p>
+
+  {
+    notes.length === 0 && (
+      <p>Nothing here yet.</p>
+    )
+  }
+
+  <ul class="note-list">
+    {
+      notes.map((note) => (
+        <li>
+          <a href={`/notes/${note.id}`} class="note-link">
+            <span class="note-title">{note.data.title}</span>
+            <time class="muted" datetime={note.data.date.toISOString()}>
+              {fmt(note.data.date)}
+            </time>
+          </a>
+          {note.data.summary && <p class="muted note-summary">{note.data.summary}</p>}
+          {note.data.tags.length > 0 && (
+            <ul class="pill-row">
+              {note.data.tags.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .note-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .note-list li {
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .note-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    color: var(--text);
+  }
+  .note-link:hover {
+    text-decoration: none;
+  }
+  .note-link:hover .note-title {
+    color: var(--accent);
+  }
+  .note-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .note-link time {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .note-summary {
+    margin: 0.35rem 0 0.5rem;
+    font-size: 0.95rem;
+  }
+</style>

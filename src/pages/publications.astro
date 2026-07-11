@@ -1,0 +1,90 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { publications } from "../data/publications";
+
+// Group publications by year, newest first.
+const byYear = publications.reduce<Record<number, typeof publications>>(
+  (acc, pub) => {
+    (acc[pub.year] ??= []).push(pub);
+    return acc;
+  },
+  {},
+);
+const years = Object.keys(byYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+---
+
+<BaseLayout
+  title="Publications"
+  description="Publications by Klaas Meersman."
+>
+  <h1>Publications</h1>
+  <p class="muted">
+    A full list is also on my
+    <a href="https://scholar.google.com">Google Scholar</a> profile (add your
+    link in <code>src/consts.ts</code>).
+  </p>
+
+  {
+    years.map((year) => (
+      <section>
+        <h2>{year}</h2>
+        {byYear[year].map((pub) => (
+          <article class="pub">
+            <p class="pub-title">{pub.title}</p>
+            <p class="pub-meta">
+              {pub.authors}. <em>{pub.venue}</em>, {pub.year}.
+              {pub.type && <span class="tag pub-type">{pub.type}</span>}
+            </p>
+            {pub.note && <p class="muted pub-note">{pub.note}</p>}
+            <p class="pub-links">
+              {pub.doi && (
+                <a href={`https://doi.org/${pub.doi}`}>DOI</a>
+              )}
+              {pub.pdf && <a href={pub.pdf}>PDF</a>}
+              {pub.code && <a href={pub.code}>Code</a>}
+              {pub.url && <a href={pub.url}>Link</a>}
+            </p>
+          </article>
+        ))}
+      </section>
+    ))
+  }
+
+  {
+    publications.length === 0 && (
+      <p>No publications listed yet — add them in <code>src/data/publications.ts</code>.</p>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .pub {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pub-title {
+    font-weight: 600;
+    margin: 0 0 0.2rem;
+  }
+  .pub-meta {
+    margin: 0 0 0.35rem;
+    color: var(--text-soft);
+    font-size: 0.97rem;
+  }
+  .pub-type {
+    margin-left: 0.4rem;
+    text-transform: capitalize;
+  }
+  .pub-note {
+    margin: 0 0 0.35rem;
+    font-size: 0.92rem;
+  }
+  .pub-links {
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+</style>
