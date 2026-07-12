@@ -1,20 +1,20 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../consts";
 
-// Edit this list. Delete the whole page (and its NAV entry in consts.ts) if you
-// don't teach.
+// Courses I'm involved in. Add new entries here as they come up.
 const teaching = [
   {
-    role: "Teaching assistant",
-    course: "Course name (e.g. Lighting Technology)",
-    detail: "Programme · KU Leuven",
-    period: "2024 – present",
+    role: "Lab sessions",
+    course: "Communication Networks",
+    detail: "KU Leuven, Ghent Technology Campus",
+    period: "2025 – present",
   },
   {
-    role: "Thesis supervision",
-    course: "Co-supervising MSc / BSc student projects",
-    detail: "Light & Lighting Laboratory",
-    period: "2025",
+    role: "Teaching assistant",
+    course: "Electromagnetic Waves and Antennas",
+    detail: "KU Leuven, Ghent Technology Campus",
+    period: "2025 – present",
   },
 ];
 ---
@@ -24,10 +24,7 @@ const teaching = [
   description="Teaching and student supervision by Klaas Meersman."
 >
   <h1>Teaching</h1>
-  <p class="lead">
-    Courses I help teach and students I (co-)supervise. Edit this in
-    <code>src/pages/teaching.astro</code>.
-  </p>
+  <p class="lead">Courses I help teach at KU Leuven's Ghent Technology Campus.</p>
 
   <ul class="teach-list">
     {
@@ -44,9 +41,10 @@ const teaching = [
 
   <h2>Interested in a thesis topic?</h2>
   <p>
-    If you're a student looking for a thesis or internship in lighting, feel
-    free to <a href="/#find-me">get in touch</a> — describe what you'd like to
-    offer here.
+    If you're a student looking for a thesis or internship around lighting,
+    daylight simulation, or VR, feel free to
+    <a href={`mailto:${SITE.email}`}>get in touch</a>. I'm always happy to talk
+    through ideas.
   </p>
 </BaseLayout>
 
