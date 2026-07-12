@@ -11,8 +11,10 @@ export interface Milestone {
   // Human-friendly label shown on the timeline, e.g. "Nov 2025".
   display: string;
   title: string;
+  // May contain simple HTML, so you can put links inside the sentence,
+  // e.g. 'supervised by <a href="https://...">Stijn Volckaert</a>.'
   detail?: string;
-  url?: string; // optional link (event page, paper, ...)
+  url?: string; // optional link on the title itself (event page, paper, ...)
 }
 
 export const timeline: Milestone[] = [
@@ -30,5 +32,12 @@ export const timeline: Milestone[] = [
     title: "Started my PhD at KU Leuven",
     detail:
       "Joined the Light & Lighting Laboratory to work on VR and digital twins for human-centric, spatially adaptive lighting.",
+  },
+  {
+    date: "2025-09",
+    display: "Sep 2025",
+    title: "Graduated — MSc in Engineering Technology",
+    detail:
+      'Master\'s thesis: <em>Studying in-process memory isolation mechanisms</em>, supervised by <a href="https://stijn-volckaert.github.io/personal/">Prof. Dr. Stijn Volckaert</a>.',
   },
 ];

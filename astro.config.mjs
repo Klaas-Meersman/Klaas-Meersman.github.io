@@ -4,8 +4,8 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  // Your live URL. This is a *user* GitHub Pages repo (kitmitmit.github.io),
+  // Your live URL. This is a *user* GitHub Pages repo (klaas-meersman.github.io),
   // so the site is served from the root — no `base` path needed.
-  site: "https://kitmitmit.github.io",
+  site: "https://klaas-meersman.github.io",
   integrations: [sitemap()],
 });

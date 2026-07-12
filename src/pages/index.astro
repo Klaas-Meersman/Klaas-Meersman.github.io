@@ -34,30 +34,28 @@ const social = [
       </p>
       <p>
         I'm a PhD researcher at the
-        <a href={LAB_URL}>Light &amp; Lighting Laboratory</a>
-        at KU Leuven, where I study how light shapes human experience — and how
-        it can improve health, comfort, and performance. My work builds a virtual
-        reality framework for designing and evaluating
-        <em>spatially adaptive, daylight-integrated</em> lighting: luminaires that
-        shape light dynamically in space and time, delivering it where and when it
-        is actually needed.
+        <a href={LAB_URL}>Light &amp; Lighting Laboratory</a> at KU Leuven. I work
+        on lighting that can change its shape. Instead of one fixed beam, these
+        luminaires can put light exactly where it's needed and keep adjusting as
+        the daylight shifts through the day. My job is to figure out how to design
+        and test them in virtual reality, before anyone has to build the real
+        thing.
       </p>
       <p>
-        The questions that drive me sit where physics, human perception, and
-        algorithmic design meet. How do electric light and daylight combine to
-        affect both what we consciously see and what we don't — circadian and
-        melanopic stimulation? And can VR faithfully reproduce that light stimulus
-        at the eye? I build digital twins and VR experiments to find out.
+        What keeps me interested is that light does two jobs at once. There's the
+        light you notice: whether a room feels pleasant, whether you can actually
+        see what you're doing. And then there's the light you don't notice, quietly
+        nudging your body clock and how awake you feel. Getting both right while
+        the daylight keeps changing turns out to be a genuinely hard problem, so I
+        build simulations and run VR experiments to see what holds up.
       </p>
       <p>
-        Before lighting, I studied Electronics &amp; IT, with an Erasmus at UPV
-        Valencia, followed by a Master's in Engineering Technology and a thesis on
-        hardware defenses against memory-safety attacks. Longer term, I'd like to
-        build VR technology that improves accessibility for people with visual
-        impairments.
+        I came into this from electronics and IT, then a Master's in Engineering
+        Technology. Somewhere down the line, I'd like to use VR to make things more
+        accessible for people with impairments.
       </p>
       <p>
-        Feel free to reach out at
+        If any of this sounds interesting, drop me a line at
         <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
       </p>
 
@@ -95,7 +93,7 @@ const social = [
             <strong>
               {m.url ? <a href={m.url}>{m.title}</a> : m.title}
             </strong>
-            {m.detail && <p class="muted tl-detail">{m.detail}</p>}
+            {m.detail && <p class="muted tl-detail" set:html={m.detail} />}
           </div>
         </li>
       ))

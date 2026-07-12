@@ -43,7 +43,7 @@ export const LINKS = {
   // (https://www.kuleuven.be/wieiswie/en/person/000000) once you have the link.
   kuleuven: "https://iiw.kuleuven.be/onderzoek/lichttechnologie/english/staff",
   orcid: "", // e.g. https://orcid.org/0000-0000-0000-0000
-  github: "https://github.com/KitMitMiT",
+  github: "https://github.com/klaas-meersman",
   linkedin: "", // e.g. https://www.linkedin.com/in/klaas-meersman
 };
 

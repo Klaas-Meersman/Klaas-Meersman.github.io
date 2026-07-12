@@ -1,9 +1,9 @@
-# kitmitmit.github.io
+# klaas-meersman.github.io
 
 Personal academic website of **Klaas Meersman** — PhD researcher at the
 Light & Lighting Laboratory, KU Leuven. Built with [Astro](https://astro.build).
 
-Live at <https://kitmitmit.github.io>.
+Live at <https://klaas-meersman.github.io>.
 
 ## Running it locally
 
