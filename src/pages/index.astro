@@ -1,18 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SITE, LINKS } from "../consts";
+import { SITE, LINKS, LAB_URL } from "../consts";
+import { timeline } from "../data/timeline";
+
+// Newest milestone first.
+const milestones = [...timeline].sort((a, b) => b.date.localeCompare(a.date));
 
 // Research interests shown as pills. Edit freely.
 const interests = [
-  "Light & lighting",
   "Human-centric lighting",
+  "Spatially adaptive lighting",
   "Non-visual effects of light",
-  "Lighting measurement & metrics",
+  "Virtual reality & digital twins",
+  "Daylight integration",
+  "Lighting metrics & control",
 ];
 
 const social = [
   { label: "Email", href: LINKS.email },
-  { label: "Google Scholar", href: LINKS.googleScholar },
+  { label: "KU Leuven", href: LINKS.kuleuven },
   { label: "ORCID", href: LINKS.orcid },
   { label: "GitHub", href: LINKS.github },
   { label: "LinkedIn", href: LINKS.linkedin },
@@ -28,12 +34,32 @@ const social = [
       </p>
       <p>
         I'm a PhD researcher at the
-        <a href={LINKS.kuleuven || "https://www.mech.kuleuven.be/en/tme/research/energy-systems-integration-modeling/lighting"}
-          >Light &amp; Lighting Laboratory</a
-        >
-        at KU Leuven. <strong>Replace this paragraph</strong> with a short,
-        friendly introduction: what you study, the questions that drive you, and
-        what a visitor should know. Two or three sentences is plenty.
+        <a href={LAB_URL}>Light &amp; Lighting Laboratory</a>
+        at KU Leuven, where I study how light shapes human experience — and how
+        it can improve health, comfort, and performance. My project develops a
+        high-fidelity virtual reality framework for designing and evaluating
+        <em>spatially adaptive, daylight-integrated</em> lighting: a new class of
+        luminaires (think a high-resolution micro-LED array with projection
+        optics) that shape light dynamically in space and time, delivering it
+        where and when it is actually needed.
+      </p>
+      <p>
+        The questions that drive me sit where physics, human perception, and
+        algorithmic design meet. How do spatially varying electric light and
+        daylight combine to affect both what we consciously see (visual comfort)
+        and what we don't (circadian, melanopic stimulation)? Can immersive VR
+        faithfully reproduce that light stimulus at the eye? And what metrics and
+        control strategies let us deploy adaptive lighting well? I build digital
+        twins and VR experiments to find out.
+      </p>
+      <p>
+        Before lighting, I studied Electronics &amp; IT — including an Erasmus at
+        UPV Valencia that led to two conference papers — followed by a Master's
+        in Engineering Technology, where my thesis probed weaknesses in hardware
+        defenses against memory-safety attacks. I'm drawn to research
+        that combines intellectual depth, interdisciplinarity, and societal
+        relevance, and longer term I'd like to develop VR technology that
+        improves accessibility for people with visual impairments.
       </p>
       <p>
         Feel free to reach out at
@@ -46,25 +72,54 @@ const social = [
     </div>
 
     <aside class="intro-photo">
-      <!-- Drop a photo at public/profile.jpg and it will appear here.
-           Until then, this shows your initials. -->
-      <div class="avatar" aria-hidden="true">KM</div>
-      <p class="muted small">
-        Add a photo at <code>public/profile.jpg</code> and swap the block in
-        <code>src/pages/index.astro</code>.
-      </p>
+      <!-- Swap the photo by replacing public/profile.jpg. -->
+      <img
+        class="avatar"
+        src="/profile.jpg"
+        alt="Portrait of Klaas Meersman"
+        width="400"
+        height="400"
+        loading="eager"
+      />
     </aside>
   </section>
 
   <h2>Currently</h2>
   <ul class="now">
     <li>
-      Pursuing my PhD at the Light &amp; Lighting Laboratory, KU Leuven — edit
-      these bullet points to say what you're working on right now.
+      Building a digital-twin framework that couples spatially adaptive electric
+      lighting with spectral, time-resolved daylight simulation.
     </li>
-    <li>Reading and taking <a href="/notes">notes</a> on papers in my field.</li>
-    <li>Open to collaborations — get in touch.</li>
+    <li>
+      Investigating how faithfully VR head-mounted displays reproduce visual and
+      non-visual (melanopic) light exposure at the eye.
+    </li>
+    <li>
+      Rethinking lighting performance metrics and control strategies for
+      non-uniform, daylight-integrated scenes.
+    </li>
+    <li>
+      Always reading around the field — and open to collaborations across
+      lighting, perception, and VR.
+    </li>
   </ul>
+
+  <h2>Timeline</h2>
+  <ol class="timeline-v">
+    {
+      milestones.map((m) => (
+        <li>
+          <span class="tl-date muted">{m.display}</span>
+          <div class="tl-body">
+            <strong>
+              {m.url ? <a href={m.url}>{m.title}</a> : m.title}
+            </strong>
+            {m.detail && <p class="muted tl-detail">{m.detail}</p>}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
 
   {
     social.length > 0 && (
@@ -104,12 +159,10 @@ const social = [
     width: 9rem;
     height: 9rem;
     border-radius: 50%;
-    margin: 0 auto 0.6rem;
-    display: grid;
-    place-items: center;
-    font-family: var(--font-serif);
-    font-size: 2.6rem;
-    color: var(--accent);
+    margin: 0 auto;
+    display: block;
+    /* Crop to a circle without squashing the photo. */
+    object-fit: cover;
     background: var(--accent-soft);
     border: 1px solid var(--border);
   }
@@ -119,6 +172,47 @@ const social = [
   .now li {
     margin-bottom: 0.4rem;
   }
+  /* Vertical timeline: a line on the left with a dot per milestone. */
+  .timeline-v {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  .timeline-v li {
+    position: relative;
+    padding: 0 0 1.4rem 1.6rem;
+    border-left: 2px solid var(--border);
+  }
+  .timeline-v li:last-child {
+    border-left-color: transparent;
+    padding-bottom: 0;
+  }
+  .timeline-v li::before {
+    content: "";
+    position: absolute;
+    left: -0.44rem;
+    top: 0.35rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .tl-date {
+    display: block;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .tl-body strong {
+    font-family: var(--font-serif);
+  }
+  .tl-detail {
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
+  }
+
   .link-pill {
     display: inline-block;
     border: 1px solid var(--border);

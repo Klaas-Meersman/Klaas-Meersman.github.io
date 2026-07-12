@@ -12,7 +12,7 @@ export const SITE = {
   affiliation: "Light & Lighting Laboratory, KU Leuven",
   // A one-line description used for search engines and social previews.
   description:
-    "Klaas Meersman — PhD researcher at the Light & Lighting Laboratory, KU Leuven.",
+    "Klaas Meersman — PhD researcher at the Light & Lighting Laboratory, KU Leuven, working on virtual reality and digital twins for human-centric, spatially adaptive lighting.",
   email: "klaas.meersman@kuleuven.be",
   // City / campus, shown in the footer and contact section.
   location: "Ghent, Belgium",
@@ -28,7 +28,6 @@ export const NAV = [
   { label: "Publications", href: "/publications" },
   { label: "Research", href: "/research" },
   { label: "Teaching", href: "/teaching" },
-  { label: "Notes", href: "/notes" },
   { label: "CV", href: "/cv" },
 ];
 
@@ -40,9 +39,13 @@ export const NAV = [
 
 export const LINKS = {
   email: "mailto:klaas.meersman@kuleuven.be",
-  googleScholar: "", // e.g. https://scholar.google.com/citations?user=XXXX
+  // Your KU Leuven page. Swap this for your personal "Who's Who" profile
+  // (https://www.kuleuven.be/wieiswie/en/person/000000) once you have the link.
+  kuleuven: "https://iiw.kuleuven.be/onderzoek/lichttechnologie/english/staff",
   orcid: "", // e.g. https://orcid.org/0000-0000-0000-0000
   github: "https://github.com/KitMitMiT",
   linkedin: "", // e.g. https://www.linkedin.com/in/klaas-meersman
-  kuleuven: "", // e.g. your KU Leuven "Who's Who" profile page
 };
+
+// The Light & Lighting Laboratory's own site (linked from the bio).
+export const LAB_URL = "https://iiw.kuleuven.be/onderzoek/lichttechnologie";

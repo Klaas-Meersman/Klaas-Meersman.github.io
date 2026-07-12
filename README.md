@@ -31,29 +31,13 @@ Everything is plain text — mostly Markdown and small `.astro`/`.ts` files.
 | Research projects              | `src/data/projects.ts`                        |
 | Teaching                       | `src/pages/teaching.astro`                    |
 | CV                             | `src/pages/cv.astro` (+ drop `public/cv.pdf`) |
-| A new note / paper summary     | add a `.md` file in `src/content/notes/`      |
+| Timeline / news                | `src/data/timeline.ts`                        |
 | Colours & fonts                | `src/styles/global.css` (the `--variables`)   |
 
 ### Adding a photo
 
 Drop `profile.jpg` into the `public/` folder and update the avatar block near
 the top of `src/pages/index.astro`.
-
-### Adding a note
-
-Create a file like `src/content/notes/my-note.md`:
-
-```markdown
----
-title: "My note title"
-date: 2026-01-15
-summary: One-line summary shown in the list.
-tags: ["reading notes"]
-draft: false
----
-
-Your Markdown content here.
-```
 
 ## Deployment
 

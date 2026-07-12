@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { publications } from "../data/publications";
+import { LINKS } from "../consts";
 
 // Group publications by year, newest first.
 const byYear = publications.reduce<Record<number, typeof publications>>(
@@ -21,9 +22,7 @@ const years = Object.keys(byYear)
 >
   <h1>Publications</h1>
   <p class="muted">
-    A full list is also on my
-    <a href="https://scholar.google.com">Google Scholar</a> profile (add your
-    link in <code>src/consts.ts</code>).
+    See also my <a href={LINKS.kuleuven}>KU Leuven page</a>.
   </p>
 
   {
