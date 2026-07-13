@@ -39,11 +39,25 @@ const years = Object.keys(byYear)
             {pub.note && <p class="muted pub-note">{pub.note}</p>}
             <p class="pub-links">
               {pub.doi && (
-                <a href={`https://doi.org/${pub.doi}`}>DOI</a>
+                <a class="pub-chip" href={`https://doi.org/${pub.doi}`}>
+                  DOI
+                </a>
               )}
-              {pub.pdf && <a href={pub.pdf}>PDF</a>}
-              {pub.code && <a href={pub.code}>Code</a>}
-              {pub.url && <a href={pub.url}>Link</a>}
+              {pub.pdf && (
+                <a class="pub-chip" href={pub.pdf}>
+                  {pub.type === "poster" ? "Poster (PDF)" : "Paper (PDF)"}
+                </a>
+              )}
+              {pub.code && (
+                <a class="pub-chip" href={pub.code}>
+                  Code
+                </a>
+              )}
+              {pub.url && (
+                <a class="pub-chip" href={pub.url}>
+                  Event page
+                </a>
+              )}
             </p>
           </article>
         ))}
@@ -80,10 +94,24 @@ const years = Object.keys(byYear)
     margin: 0 0 0.35rem;
     font-size: 0.92rem;
   }
+  /* Labelled chips, so it's obvious what each link actually opens. */
   .pub-links {
-    margin: 0;
+    margin: 0.5rem 0 0;
     display: flex;
-    gap: 1rem;
-    font-size: 0.9rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .pub-chip {
+    display: inline-block;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+  .pub-chip:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    text-decoration: none;
   }
 </style>

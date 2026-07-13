@@ -23,8 +23,7 @@ export const timeline: Milestone[] = [
     display: "2 Jul 2026",
     title:
       'Presented at the <a href="https://set.kuleuven.be/phd/seminars/wavecore-phd-symposium">WaveCoRE PhD Symposium</a>, KU Leuven Campus Bruges',
-    detail:
-      'Poster: <a href="/papers/phd-symposium-poster.pdf"><em>High-Fidelity Virtual Reality Framework for Human-centric Evaluation of Spatially Adaptive Lighting</em></a>.',
+    detail: '<a href="/papers/phd-symposium-poster.pdf">Poster (PDF)</a>',
   },
   {
     date: "2026-04-20",
@@ -32,7 +31,7 @@ export const timeline: Milestone[] = [
     title:
       'Spring School on Social XR — <a href="https://www.dis.cwi.nl/spring-school/">CWI Amsterdam</a>',
     detail:
-      "Deepened my immersive-technology skills for lighting research, and presented essentially the same poster there.",
+      'Presented the same poster (<a href="/papers/phd-symposium-poster.pdf">PDF</a>).',
   },
   {
     date: "2025-11-15",

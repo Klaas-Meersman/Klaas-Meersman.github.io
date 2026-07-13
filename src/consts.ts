@@ -39,12 +39,11 @@ export const NAV = [
 
 export const LINKS = {
   email: "mailto:klaas.meersman@kuleuven.be",
-  // Your KU Leuven page. Swap this for your personal "Who's Who" profile
-  // (https://www.kuleuven.be/wieiswie/en/person/000000) once you have the link.
-  kuleuven: "https://iiw.kuleuven.be/onderzoek/lichttechnologie/english/staff",
+  // My KU Leuven "Who's Who" profile.
+  kuleuven: "https://www.kuleuven.be/wieiswie/en/person/00183594",
   orcid: "", // e.g. https://orcid.org/0000-0000-0000-0000
   github: "https://github.com/klaas-meersman",
-  linkedin: "", // e.g. https://www.linkedin.com/in/klaas-meersman
+  linkedin: "https://www.linkedin.com/in/klaas-meersman",
 };
 
 // The Light & Lighting Laboratory's own site (linked from the bio).
