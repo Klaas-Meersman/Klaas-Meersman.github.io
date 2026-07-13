@@ -2,8 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 
-// A lightweight web CV. Edit the arrays below. You can also drop a PDF at
-// public/cv.pdf and the download button will link to it.
+// A lightweight web CV. Edit the arrays below.
 //
 // `supervisors`, `grade`, `activities`, and `thesis` are optional — leave them
 // out if an entry doesn't need them. `supervisors` and `thesis` may contain links.
@@ -21,7 +20,7 @@ const education = [
     where: "KU Leuven, Ghent Campus",
     grade: "Magna cum laude",
     thesis:
-      'Studying in-process memory isolation mechanisms — supervised by <a href="https://stijn-volckaert.github.io/personal/">Prof. Dr. Stijn Volckaert</a>',
+      'Studying in-process memory isolation mechanisms — supervised by <a href="https://stijn-volckaert.github.io/personal/">Prof. Stijn Volckaert</a>',
   },
   {
     when: "Sep 2018 – Jun 2022",
@@ -35,9 +34,9 @@ const education = [
   },
   {
     when: "Sep 2016 – Jun 2018",
-    what: "Bachelor of Science, Economics (unfinished)",
+    what: "Bachelor of Science, Economics",
     where: "Ghent University",
-    activities: "Switched to Electronics-ICT.",
+    activities: "Unfinished.",
   },
 ];
 
@@ -59,11 +58,7 @@ const skills = [
 ---
 
 <BaseLayout title="CV" description="Curriculum vitae of Klaas Meersman.">
-  <div class="cv-head">
-    <h1>Curriculum Vitae</h1>
-    <!-- Put a PDF at public/cv.pdf to enable this link. -->
-    <a class="download" href="/cv.pdf">Download PDF ↓</a>
-  </div>
+  <h1>Curriculum Vitae</h1>
   <p class="muted">
     {SITE.name} · {SITE.role}, {SITE.affiliation}
   </p>
@@ -119,24 +114,6 @@ const skills = [
 </BaseLayout>
 
 <style>
-  .cv-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-  }
-  .download {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.35rem 0.8rem;
-    font-size: 0.9rem;
-    white-space: nowrap;
-  }
-  .download:hover {
-    border-color: var(--accent);
-    text-decoration: none;
-  }
   .timeline {
     list-style: none;
     padding: 0;

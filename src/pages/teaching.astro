@@ -4,18 +4,20 @@ import { SITE } from "../consts";
 
 // Courses I'm involved in. Add new entries here as they come up.
 // `url` links the course name to its page in the KU Leuven course catalogue.
+// Use the unprefixed URL — the year-prefixed one (.../2026/syllabi/...) is not
+// public yet and returns an error for visitors without a KU Leuven login.
 const teaching = [
   {
     role: "Teaching assistant",
     course: "Communication Networks",
-    url: "https://onderwijsaanbod.kuleuven.be/2026/syllabi/v/e/JPI13Q",
+    url: "https://onderwijsaanbod.kuleuven.be/syllabi/v/e/JPI13Q.htm",
     detail: "KU Leuven, Ghent Technology Campus",
     period: "2026 – present",
   },
   {
     role: "Teaching assistant",
     course: "Electromagnetic Waves and Antennas",
-    url: "https://onderwijsaanbod.kuleuven.be/2026/syllabi/v/e/JPI123",
+    url: "https://onderwijsaanbod.kuleuven.be/syllabi/v/e/JPI123.htm",
     detail: "KU Leuven, Ghent Technology Campus",
     period: "2026 – present",
   },

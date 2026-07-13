@@ -30,7 +30,7 @@ Everything is plain text — mostly Markdown and small `.astro`/`.ts` files.
 | Publications                   | `src/data/publications.ts`                    |
 | Research projects              | `src/data/projects.ts`                        |
 | Teaching                       | `src/pages/teaching.astro`                    |
-| CV                             | `src/pages/cv.astro` (+ drop `public/cv.pdf`) |
+| CV                             | `src/pages/cv.astro`                          |
 | Timeline / news                | `src/data/timeline.ts`                        |
 | Colours & fonts                | `src/styles/global.css` (the `--variables`)   |
 
