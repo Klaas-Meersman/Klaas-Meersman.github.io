@@ -48,12 +48,29 @@ const experience = [
   },
 ];
 
+// Grouped so the most relevant skills lead. C# and C++ matter here because of
+// Unity/VR and simulation work; Python for analysis.
 const skills = [
-  "Lighting measurement",
-  "Data analysis (Python)",
-  "Scientific writing",
-  "Dutch (native)",
-  "English (fluent)",
+  {
+    group: "Programming",
+    items: ["Python", "C#", "C++", "C"],
+  },
+  {
+    group: "Engineering",
+    items: ["Digital signal processing", "IoT", "Telecommunication"],
+  },
+  {
+    group: "Tools",
+    items: ["Git"],
+  },
+];
+
+const languages = [
+  { name: "Dutch", level: "Native" },
+  { name: "English", level: "Proficient" },
+  { name: "French", level: "Intermediate" },
+  { name: "German", level: "Basic" },
+  { name: "Spanish", level: "Basic" },
 ];
 ---
 
@@ -107,9 +124,32 @@ const skills = [
     }
   </ul>
 
-  <h2>Skills &amp; languages</h2>
-  <ul class="pill-row">
-    {skills.map((s) => <li class="tag">{s}</li>)}
+  <h2>Skills</h2>
+  <ul class="skill-groups">
+    {
+      skills.map((s) => (
+        <li>
+          <span class="when">{s.group}</span>
+          <ul class="pill-row">
+            {s.items.map((i) => (
+              <li class="tag">{i}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Languages</h2>
+  <ul class="lang-list">
+    {
+      languages.map((l) => (
+        <li>
+          <span class="lang-name">{l.name}</span>
+          <span class="muted">{l.level}</span>
+        </li>
+      ))
+    }
   </ul>
 </BaseLayout>
 
@@ -133,6 +173,32 @@ const skills = [
   .detail {
     font-size: 0.92rem;
     margin-top: 0.25rem;
+  }
+  /* Skills and languages reuse the same label gutter as the timeline above,
+     so the whole page lines up on one grid. */
+  .skill-groups,
+  .lang-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .skill-groups > li,
+  .lang-list > li {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0.5rem 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .lang-name {
+    font-weight: 600;
+  }
+  @media (max-width: 540px) {
+    .skill-groups > li,
+    .lang-list > li {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
   }
   .thesis {
     font-style: italic;
