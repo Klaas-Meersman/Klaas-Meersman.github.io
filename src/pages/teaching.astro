@@ -3,16 +3,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE } from "../consts";
 
 // Courses I'm involved in. Add new entries here as they come up.
+// `url` links the course name to its page in the KU Leuven course catalogue.
 const teaching = [
   {
-    role: "Lab sessions",
+    role: "Teaching assistant",
     course: "Communication Networks",
+    url: "https://onderwijsaanbod.kuleuven.be/syllabi/n/JPI13Q",
     detail: "KU Leuven, Ghent Technology Campus",
     period: "2025 – present",
   },
   {
     role: "Teaching assistant",
     course: "Electromagnetic Waves and Antennas",
+    url: "https://onderwijsaanbod.kuleuven.be/syllabi/v/e/JPI123",
     detail: "KU Leuven, Ghent Technology Campus",
     period: "2025 – present",
   },
@@ -30,7 +33,8 @@ const teaching = [
     {
       teaching.map((t) => (
         <li>
-          <strong>{t.role}</strong> — {t.course}
+          <strong>{t.role}</strong> —{" "}
+          {t.url ? <a href={t.url}>{t.course}</a> : t.course}
           <div class="muted small">
             {t.detail} · {t.period}
           </div>
