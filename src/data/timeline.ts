@@ -29,14 +29,15 @@ export const timeline: Milestone[] = [
   {
     date: "2025-11-15",
     display: "Nov 2025",
-    title: "Started my PhD at KU Leuven",
+    title:
+      'Started my PhD at the <a href="https://iiw.kuleuven.be/onderzoek/lichttechnologie/home/">Light &amp; Lighting Laboratory</a>, KU Leuven',
     detail:
-      "Joined the Light & Lighting Laboratory to work on VR and digital twins for human-centric, spatially adaptive lighting.",
+      "Working on VR and digital twins for human-centric, spatially adaptive lighting.",
   },
   {
     date: "2025-09",
     display: "Sep 2025",
-    title: "Graduated — MSc in Engineering Technology",
+    title: "Graduated Magna Cum Laude from MSc in Engineering Technology at KU Leuven, Ghent Campus",
     detail:
       'Master\'s thesis: <em>Studying in-process memory isolation mechanisms</em>, supervised by <a href="https://stijn-volckaert.github.io/personal/">Prof. Dr. Stijn Volckaert</a>.',
   },

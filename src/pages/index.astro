@@ -3,8 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE, LINKS, LAB_URL } from "../consts";
 import { timeline } from "../data/timeline";
 
-// Newest milestone first.
+// Newest milestone first, then grouped by year for the timeline headings.
 const milestones = [...timeline].sort((a, b) => b.date.localeCompare(a.date));
+const years = [...new Set(milestones.map((m) => m.date.slice(0, 4)))];
+const byYear = years.map((year) => ({
+  year,
+  items: milestones.filter((m) => m.date.startsWith(year)),
+}));
 
 // Research interests shown as pills. Edit freely.
 const interests = [
@@ -84,21 +89,32 @@ const social = [
   </p>
 
   <h2>Timeline</h2>
-  <ol class="timeline-v">
+  <div class="timeline-v">
     {
-      milestones.map((m) => (
-        <li>
-          <span class="tl-date muted">{m.display}</span>
-          <div class="tl-body">
-            <strong>
-              {m.url ? <a href={m.url}>{m.title}</a> : m.title}
-            </strong>
-            {m.detail && <p class="muted tl-detail" set:html={m.detail} />}
-          </div>
-        </li>
+      byYear.map((group) => (
+        <section class="tl-group">
+          <h3 class="tl-year">{group.year}</h3>
+          <ol>
+            {group.items.map((m) => (
+              <li>
+                <span class="tl-date muted">{m.display}</span>
+                <div class="tl-body">
+                  <strong class="tl-title">
+                    {m.url ? (
+                      <a href={m.url} set:html={m.title} />
+                    ) : (
+                      <Fragment set:html={m.title} />
+                    )}
+                  </strong>
+                  {m.detail && <p class="muted tl-detail" set:html={m.detail} />}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
       ))
     }
-  </ol>
+  </div>
 
   {
     social.length > 0 && (
@@ -145,41 +161,75 @@ const social = [
     background: var(--accent-soft);
     border: 1px solid var(--border);
   }
-  /* Vertical timeline: a line on the left with a dot per milestone. */
+  /* Vertical timeline: one continuous line, a year heading per group
+     (large hollow ring) and a small filled dot per milestone. */
   .timeline-v {
+    margin: 0;
+    padding: 0;
+  }
+  .tl-group ol {
     list-style: none;
     margin: 0;
     padding: 0;
-    position: relative;
   }
-  .timeline-v li {
+
+  /* Year heading sits on the line with a hollow ring. */
+  .tl-year {
+    position: relative;
+    margin: 0;
+    padding: 0 0 0.9rem 1.6rem;
+    border-left: 2px solid var(--border);
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .tl-year::before {
+    content: "";
+    position: absolute;
+    left: -0.53rem;
+    top: 0.35rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+  /* Breathing room between year groups. */
+  .tl-group + .tl-group .tl-year {
+    padding-top: 1.4rem;
+  }
+
+  .tl-group li {
     position: relative;
     padding: 0 0 1.4rem 1.6rem;
     border-left: 2px solid var(--border);
   }
-  .timeline-v li:last-child {
+  .tl-group li::before {
+    content: "";
+    position: absolute;
+    left: -0.32rem;
+    top: 0.45rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  /* End the line after the very last milestone. */
+  .tl-group:last-child li:last-child {
     border-left-color: transparent;
     padding-bottom: 0;
   }
-  .timeline-v li::before {
-    content: "";
-    position: absolute;
-    left: -0.44rem;
-    top: 0.35rem;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--bg);
-  }
+
   .tl-date {
     display: block;
     font-size: 0.82rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
   }
-  .tl-body strong {
+  .tl-title {
     font-family: var(--font-serif);
+    font-weight: 600;
   }
   .tl-detail {
     margin: 0.2rem 0 0;
