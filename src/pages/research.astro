@@ -1,31 +1,43 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { projects } from "../data/projects";
+import { objectives } from "../data/objectives";
 ---
 
 <BaseLayout
   title="Research"
-  description="Research projects and interests of Klaas Meersman."
+  description="Research objectives of Klaas Meersman — a high-fidelity VR framework for human-centric evaluation of spatially adaptive lighting."
 >
   <h1>Research</h1>
   <p class="lead">
-    Most indoor lighting is still a fixed beam with the sometimes the option to dim. I work on
-    luminaires that can put light exactly where it's needed and adapt as the
-    daylight changes, using virtual reality and digital twins to design and test
-    them before they're built. Four objectives:
+    Spatially adaptive lighting technology is here, but its integration into
+    human-centric lighting design still lags behind.
+  </p>
+  <p>
+    The hardware exists: micro-LED arrays with projection optics, camera sensors
+    for luminance and occupancy, and proven dynamic light shaping. What's missing
+    are perception-based control strategies, evaluation frameworks, and
+    human-centric design methods. VR closes that gap, because it lets us evaluate
+    lighting scenarios repeatedly under identical emulated room and daylight
+    conditions.
   </p>
 
+  <h2>Objectives</h2>
   {
-    projects.map((project) => (
+    objectives.map((o, i) => (
       <article class="card">
-        <h3>
-          {project.url ? <a href={project.url}>{project.title}</a> : project.title}
-        </h3>
-        {project.period && <p class="muted small">{project.period}</p>}
-        <p>{project.summary}</p>
-        {project.tags && project.tags.length > 0 && (
+        <p class="obj-n">Objective {i + 1}</p>
+        <h3>{o.title}</h3>
+        <p class="obj-line">
+          <span class="obj-label">Challenge</span>
+          {o.challenge}
+        </p>
+        <p class="obj-line">
+          <span class="obj-label">Task</span>
+          {o.task}
+        </p>
+        {o.tags && o.tags.length > 0 && (
           <ul class="pill-row">
-            {project.tags.map((t) => (
+            {o.tags.map((t) => (
               <li class="tag">{t}</li>
             ))}
           </ul>
@@ -33,11 +45,49 @@ import { projects } from "../data/projects";
       </article>
     ))
   }
+
+  <h2>Poster</h2>
+  <p>
+    <a href="/papers/phd-symposium-poster.pdf">
+      High-Fidelity Virtual Reality Framework for Human-centric Evaluation of
+      Spatially Adaptive Lighting
+    </a> (PDF) — the poster this page is based on.
+  </p>
 </BaseLayout>
 
 <style>
-  .small {
-    font-size: 0.85rem;
+  .obj-n {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .card h3 {
+    margin: 0.15rem 0 0.7rem;
+  }
+  /* Two columns so wrapped text stays aligned under itself,
+     rather than running back under the label. */
+  .obj-line {
+    display: grid;
+    grid-template-columns: 5.2rem 1fr;
+    gap: 0 0.6rem;
     margin: 0 0 0.5rem;
+  }
+  .obj-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    padding-top: 0.35rem;
+  }
+  @media (max-width: 540px) {
+    .obj-line {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .obj-label {
+      padding-top: 0;
+    }
   }
 </style>

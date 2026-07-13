@@ -3,16 +3,20 @@
 //  Add each paper as an object in the list below. The newest should go first.
 //  Only `authors`, `title`, `venue`, and `year` are required — the rest are
 //  optional links that only appear when you fill them in.
-//
-//  Tip: wrap your own name so it stands out, e.g. "K. Meersman".
 // ---------------------------------------------------------------------------
 
 export interface Publication {
   authors: string;
   title: string;
-  venue: string; // journal / conference / workshop
+  venue: string; // journal / conference / symposium / workshop
   year: number;
-  type?: "journal" | "conference" | "workshop" | "preprint" | "thesis";
+  type?:
+    | "journal"
+    | "conference"
+    | "workshop"
+    | "poster"
+    | "preprint"
+    | "thesis";
   doi?: string; // e.g. "10.1000/xyz123"
   pdf?: string; // link to a PDF
   code?: string; // link to a repository
@@ -21,17 +25,15 @@ export interface Publication {
 }
 
 export const publications: Publication[] = [
-  // ---- EXAMPLE ENTRY — replace with your own, or delete once you have real ones ----
   {
-    authors: "K. Meersman, A. Colleague, S. Supervisor",
+    authors: "K. Meersman, Y. Meuret, M. Torres Vega, W. Ryckaert",
     title:
-      "A placeholder title: replace this entry in src/data/publications.ts",
-    venue: "LEUKOS — Journal of the Illuminating Engineering Society",
-    year: 2025,
-    type: "journal",
-    doi: "",
-    pdf: "",
-    code: "",
-    note: "Example entry — delete me.",
+      "High-Fidelity Virtual Reality Framework for Human-centric Evaluation of Spatially Adaptive Lighting",
+    venue: "WaveCoRE PhD Symposium, KU Leuven Campus Bruges",
+    year: 2026,
+    type: "poster",
+    pdf: "/papers/phd-symposium-poster.pdf",
+    url: "https://set.kuleuven.be/phd/seminars/wavecore-phd-symposium",
+    note: "Also presented at the Social XR Spring School, CWI Amsterdam.",
   },
 ];

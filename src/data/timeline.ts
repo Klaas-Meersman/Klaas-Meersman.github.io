@@ -19,12 +19,20 @@ export interface Milestone {
 
 export const timeline: Milestone[] = [
   {
+    date: "2026-07-02",
+    display: "2 Jul 2026",
+    title:
+      'Presented at the <a href="https://set.kuleuven.be/phd/seminars/wavecore-phd-symposium">WaveCoRE PhD Symposium</a>, KU Leuven Campus Bruges',
+    detail:
+      'Poster: <a href="/papers/phd-symposium-poster.pdf"><em>High-Fidelity Virtual Reality Framework for Human-centric Evaluation of Spatially Adaptive Lighting</em></a>.',
+  },
+  {
     date: "2026-04-20",
     display: "20–23 Apr 2026",
-    title: "Spring School on Social XR — CWI Amsterdam",
+    title:
+      'Spring School on Social XR — <a href="https://www.dis.cwi.nl/spring-school/">CWI Amsterdam</a>',
     detail:
-      "Attended the Social XR Spring School at CWI Amsterdam to deepen my immersive-technology skills for lighting research.",
-    url: "https://www.dis.cwi.nl/spring-school/",
+      "Deepened my immersive-technology skills for lighting research, and presented essentially the same poster there.",
   },
   {
     date: "2025-11-15",

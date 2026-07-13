@@ -5,13 +5,15 @@ import { SITE } from "../consts";
 // A lightweight web CV. Edit the arrays below. You can also drop a PDF at
 // public/cv.pdf and the download button will link to it.
 //
-// `grade`, `activities`, and `thesis` are optional — leave them out if an entry
-// doesn't need them. `thesis` may contain links.
+// `supervisors`, `grade`, `activities`, and `thesis` are optional — leave them
+// out if an entry doesn't need them. `supervisors` and `thesis` may contain links.
 const education = [
   {
     when: "Nov 2025 – present",
     what: "PhD in Engineering Technology",
     where: "KU Leuven, Light & Lighting Laboratory",
+    supervisors:
+      '<a href="https://www.kuleuven.be/wieiswie/en/person/00089830">Prof. Youri Meuret</a>, <a href="https://www.kuleuven.be/wieiswie/en/person/00153950">Prof. Maria Torres Vega</a>, and <a href="https://www.kuleuven.be/wieiswie/en/person/00058788">Prof. Wouter Ryckaert</a>',
   },
   {
     when: "Sep 2022 – Aug 2025",
@@ -76,6 +78,11 @@ const skills = [
             <strong>{e.what}</strong>
             <br />
             <span class="muted">{e.where}</span>
+            {e.supervisors && (
+              <div class="detail muted">
+                Promotors: <span set:html={e.supervisors} />
+              </div>
+            )}
             {e.grade && <div class="detail muted">Grade: {e.grade}</div>}
             {e.activities && <div class="detail muted">{e.activities}</div>}
             {e.thesis && (
