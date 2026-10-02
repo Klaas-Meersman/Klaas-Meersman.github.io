@@ -16,6 +16,10 @@
 body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-ui)}
 .wrap{max-width:1320px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:grid;gap:18px}
 i.m,.m i{font-family:var(--f-math);font-style:italic}
+/* vectors: an arrow over the letter (E, 1x, 1y) */
+b.vec{position:relative;display:inline-block;line-height:1}
+b.vec::before{content:"\2192";position:absolute;left:50%;top:-.6em;transform:translateX(-50%) scaleX(.9);
+  font:400 .66em/1 var(--f-math);font-style:normal;pointer-events:none}
 .cx{color:var(--ex)} .cy{color:var(--ey)} .ce{color:var(--e)} .cg{color:var(--gamma)} .cp{color:var(--phi)} .crh{color:var(--rh)} .clh{color:var(--lh)}
 
 /* header */
@@ -110,7 +114,7 @@ dl.nums dd{margin:0;font:500 17px var(--f-num);font-variant-numeric:tabular-nums
   <header class="top">
     <div class="eyebrow">Lab EM waves · §1.3 Polarisation · equation (3)</div>
     <h1>Polarisation from <i class="cg">γ</i> and <i class="cp">φ</i></h1>
-    <p class="formula m"><b>E</b>(<i>z</i>) = |<i>E</i>| ( <span class="cx">cos <i class="cg">γ</i> <b>1</b><sub><i>x</i></sub></span> + <span class="cy">sin <i class="cg">γ</i> e<sup><i>j</i><i class="cp">φ</i></sup> <b>1</b><sub><i>y</i></sub></span> ) e<sup>−<i>jkz</i></sup></p>
+    <p class="formula m"><b class="vec">E</b>(<i>z</i>) = |<i>E</i>| ( <span class="cx">cos <i class="cg">γ</i> <b class="vec">1</b><sub><i>x</i></sub></span> + <span class="cy">sin <i class="cg">γ</i> e<sup><i>j</i><i class="cp">φ</i></sup> <b class="vec">1</b><sub><i>y</i></sub></span> ) e<sup>−<i>jkz</i></sup></p>
     <p class="lede">Two perpendicular waves with the same frequency, added together. <i class="m cg">γ</i> decides how the amplitude is shared between the <span class="cx">x-wave</span> and the <span class="cy">y-wave</span>. <i class="m cp">φ</i> shifts the y-wave in time relative to the x-wave. The tip of their <span class="ce">sum</span> traces a line, a circle or an ellipse: that shape is the polarisation.</p>
   </header>
 
@@ -127,12 +131,12 @@ dl.nums dd{margin:0;font:500 17px var(--f-num);font-variant-numeric:tabular-nums
       <figcaption class="legend">
         <span><span class="dot" style="background:var(--ex)"></span><span class="m"><i>E<sub>x</sub></i> = |<i>E</i>| cos <i class="cg">γ</i> cos(<i>ωt</i> − <i>kz</i>)</span></span>
         <span><span class="dot" style="background:var(--ey)"></span><span class="m"><i>E<sub>y</sub></i> = |<i>E</i>| sin <i class="cg">γ</i> cos(<i>ωt</i> − <i>kz</i> + <i class="cp">φ</i>)</span></span>
-        <span><span class="dot" style="background:var(--e)"></span>total field <span class="m"><b>E</b> = <i>E<sub>x</sub></i><b>1</b><sub><i>x</i></sub> + <i>E<sub>y</sub></i><b>1</b><sub><i>y</i></sub></span></span>
+        <span><span class="dot" style="background:var(--e)"></span>total field <span class="m"><b class="vec">E</b> = <i>E<sub>x</sub></i><b class="vec">1</b><sub><i>x</i></sub> + <i>E<sub>y</sub></i><b class="vec">1</b><sub><i>y</i></sub></span></span>
       </figcaption>
     </figure>
 
     <figure class="card">
-      <div class="cardhead"><span class="tag">Tip of <span class="m"><b>E</b></span> at z = 0</span><span class="hint">facing the wave, +z points at you</span></div>
+      <div class="cardhead"><span class="tag">Tip of <span class="m"><b class="vec">E</b></span> at z = 0</span><span class="hint">facing the wave, +z points at you</span></div>
       <div class="canvasbox"><canvas id="cxy" aria-label="End-on view: rotating phasors projecting onto the x and y axes, and the traced polarisation ellipse"></canvas></div>
       <figcaption>Each component is the shadow of a rotating phasor. The <span class="cy">y-phasor</span> runs <i class="m cp">φ</i> ahead of the <span class="cx">x-phasor</span> (negative <i class="m cp">φ</i>: it lags). The <span class="cg">dashed box</span> has sides 2 cos <i class="m cg">γ</i> by 2 sin <i class="m cg">γ</i>; the tip never leaves it.</figcaption>
     </figure>
@@ -168,7 +172,7 @@ dl.nums dd{margin:0;font:500 17px var(--f-num);font-variant-numeric:tabular-nums
       <span class="lbl">Show</span>
       <label class="chk cx" for="showEx"><input type="checkbox" id="showEx" checked> <span class="m"><i>E<sub>x</sub></i></span></label>
       <label class="chk cy" for="showEy"><input type="checkbox" id="showEy" checked> <span class="m"><i>E<sub>y</sub></i></span></label>
-      <label class="chk ce" for="showE"><input type="checkbox" id="showE" checked> <span class="m"><b>E</b></span></label>
+      <label class="chk ce" for="showE"><input type="checkbox" id="showE" checked> <span class="m"><b class="vec">E</b></span></label>
       <label class="chk" for="showTrace"><input type="checkbox" id="showTrace" checked> trace at z = 0</label>
     </div>
   </section>
@@ -199,7 +203,7 @@ dl.nums dd{margin:0;font:500 17px var(--f-num);font-variant-numeric:tabular-nums
     </aside>
   </section>
 
-  <p class="note">Conventions as in the lab text: phasors use <i>e</i><sup><i>jωt</i></sup>, so <b>E</b>(<i>z</i>,<i>t</i>) = Re{<b>E</b>(<i>z</i>) <i>e</i><sup><i>jωt</i></sup>} with |<i>E</i>| = 1. Handedness follows the IEEE rule: point your right thumb along +<i>z</i>; if your fingers curl the way the tip turns, the wave is right-handed. That makes <i>γ</i> = π/4, <i>φ</i> = −π/2 right-hand circular, as in figure 4b. In the end-on view +<i>z</i> points at you, so right-handed tips turn counterclockwise there.</p>
+  <p class="note">Conventions as in the lab text: phasors use <i>e</i><sup><i>jωt</i></sup>, so <b class="vec">E</b>(<i>z</i>,<i>t</i>) = Re{<b class="vec">E</b>(<i>z</i>) <i>e</i><sup><i>jωt</i></sup>} with |<i>E</i>| = 1. Handedness follows the IEEE rule: point your right thumb along +<i>z</i>; if your fingers curl the way the tip turns, the wave is right-handed. That makes <i>γ</i> = π/4, <i>φ</i> = −π/2 right-hand circular, as in figure 4b. In the end-on view +<i>z</i> points at you, so right-handed tips turn counterclockwise there.</p>
 </div>
 
 <script>
@@ -804,7 +808,7 @@ async function build() {
   const steps = [
     [`<span class="cx">Step 1 · the x-component.</span> ${Ex} = cos <i class="cg">γ</i> cos(<i>ωt</i> − <i>kz</i>) oscillates in the <i>xz</i>-plane with amplitude ${Math.cos(S.g).toFixed(2)}.`, 'ex', 2800],
     [`<span class="cy">Step 2 · the y-component,</span> in the <i>yz</i>-plane: amplitude sin <i class="cg">γ</i> = ${Math.sin(S.g).toFixed(2)}, ${shift}.`, 'ey', 3000],
-    [`<span class="ce">Step 3 · add them at every z.</span> The yellow arrows are <b>E</b> = ${Ex}<b>1</b><sub><i>x</i></sub> + ${Ey}<b>1</b><sub><i>y</i></sub>; their tips form the curve.`, 'e', 3000],
+    [`<span class="ce">Step 3 · add them at every z.</span> The yellow arrows are <b class="vec">E</b> = ${Ex}<b class="vec">1</b><sub><i>x</i></sub> + ${Ey}<b class="vec">1</b><sub><i>y</i></sub>; their tips form the curve.`, 'e', 3000],
   ];
   for (const [html, k, ms] of steps) {
     caption(html);
@@ -864,7 +868,7 @@ function updateReadout() {
   const shiftTxt = pr === 0 ? '' : ` <span class="cp">${pr < 0 ? '−' : '+'} ${Math.abs(pr)}°</span>`;
   const ph = pr === 0 ? '' : `e<sup><i>j</i>(<span class="cp">${sgn(String(pr))}°</span>)</sup> `;
   $('eqs').innerHTML =
-    `<b>E</b>(0) = <span class="cx">${f3(Math.cos(g))}</span> <b>1</b><sub><i>x</i></sub> + <span class="cy">${f3(Math.sin(g))}</span> ${ph}<b>1</b><sub><i>y</i></sub><br>` +
+    `<b class="vec">E</b>(0) = <span class="cx">${f3(Math.cos(g))}</span> <b class="vec">1</b><sub><i>x</i></sub> + <span class="cy">${f3(Math.sin(g))}</span> ${ph}<b class="vec">1</b><sub><i>y</i></sub><br>` +
     `${Ex}(<i>z</i>,<i>t</i>) = <span class="cx">${f3(Math.cos(g))}</span> cos(<i>ωt</i> − <i>kz</i>)<br>` +
     `${Ey}(<i>z</i>,<i>t</i>) = <span class="cy">${f3(Math.sin(g))}</span> cos(<i>ωt</i> − <i>kz</i>${shiftTxt})`;
 
