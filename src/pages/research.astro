@@ -27,21 +27,7 @@ import { objectives } from "../data/objectives";
       <article class="card">
         <p class="obj-n">Objective {i + 1}</p>
         <h3>{o.title}</h3>
-        <p class="obj-line">
-          <span class="obj-label">Challenge</span>
-          {o.challenge}
-        </p>
-        <p class="obj-line">
-          <span class="obj-label">Task</span>
-          {o.task}
-        </p>
-        {o.tags && o.tags.length > 0 && (
-          <ul class="pill-row">
-            {o.tags.map((t) => (
-              <li class="tag">{t}</li>
-            ))}
-          </ul>
-        )}
+        <p class="obj-desc">{o.description}</p>
       </article>
     ))
   }
@@ -59,28 +45,7 @@ import { objectives } from "../data/objectives";
   .card h3 {
     margin: 0.15rem 0 0.7rem;
   }
-  /* Two columns so wrapped text stays aligned under itself,
-     rather than running back under the label. */
-  .obj-line {
-    display: grid;
-    grid-template-columns: 5.2rem 1fr;
-    gap: 0 0.6rem;
-    margin: 0 0 0.5rem;
-  }
-  .obj-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-soft);
-    padding-top: 0.35rem;
-  }
-  @media (max-width: 540px) {
-    .obj-line {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-    .obj-label {
-      padding-top: 0;
-    }
+  .obj-desc {
+    margin: 0;
   }
 </style>
