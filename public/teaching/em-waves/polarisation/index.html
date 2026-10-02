@@ -1,0 +1,909 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Polarisation from γ and φ</title><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dark blackboard (3Blue1Brown style, single theme on purpose).
+   3D wave left, end-on phasor view right, controls, then the γ–φ map and a live readout. */
+:root{
+  color-scheme: dark;
+  --bg:#101318; --panel:#161A20; --raise:#1F242C; --line:#2A313B; --ink:#ECEAE4; --muted:#949CA8; --faint:#5A626E;
+  --ex:#58C4DD; --ey:#FC6255; --e:#FFE45C; --gamma:#83C167; --phi:#D98BEA; --rh:#F0AC5F; --lh:#5CD0B3;
+  --f-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+  --f-ui:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-ui)}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:grid;gap:18px}
+i.m,.m i{font-family:var(--f-math);font-style:italic}
+.cx{color:var(--ex)} .cy{color:var(--ey)} .ce{color:var(--e)} .cg{color:var(--gamma)} .cp{color:var(--phi)} .crh{color:var(--rh)} .clh{color:var(--lh)}
+
+/* header */
+.top{display:grid;gap:8px;max-width:980px}
+.eyebrow{font:600 12px/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font:400 clamp(30px,4.4vw,46px)/1.1 var(--f-math);text-wrap:balance;letter-spacing:-.01em}
+h1 i{font-style:italic}
+.formula{margin:4px 0 0;font:clamp(19px,2.3vw,25px)/1.5 var(--f-math);overflow-x:auto;white-space:nowrap;padding-block:4px}
+.formula b{font-weight:600}
+.formula sup{font-size:.62em}
+.formula sub{font-size:.62em}
+.lede{margin:0;color:var(--muted);max-width:68ch}
+
+/* cards */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:0;min-width:0}
+.cardhead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.tag{font:600 13px/1.2 var(--f-ui);letter-spacing:.08em;text-transform:uppercase}
+.hint{font-size:13px;color:var(--muted)}
+.cardhead .seg{margin-left:auto}
+.canvasbox{position:relative}
+canvas{display:block;width:100%;height:auto}
+#c3d{aspect-ratio:3/2;cursor:grab;touch-action:pan-y}
+#c3d:active{cursor:grabbing}
+#cxy{aspect-ratio:1/1}
+#cmap{aspect-ratio:16/8.4;cursor:crosshair;touch-action:none}
+figcaption{padding:10px 14px 12px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px}
+.legend span{white-space:nowrap}
+.legend .m{font-size:16px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+.caption{position:absolute;left:12px;top:12px;right:12px;max-width:560px;padding:8px 12px;border-radius:6px;
+  background:rgba(16,19,24,.82);font:17px/1.4 var(--f-math);opacity:0;transition:opacity .35s;pointer-events:none}
+.caption.on{opacity:1}
+
+.stage{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:18px;align-items:start}
+.lower{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:18px;align-items:start}
+
+/* controls */
+.controls{display:grid;gap:14px;padding:16px}
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px}
+.ctl{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:4px 14px}
+.ctl label{font-size:14px;color:var(--muted)}
+.ctl label>i{font-size:22px;color:var(--ink);margin-right:6px}
+.ctl output{justify-self:end;font:500 15px var(--f-num);font-variant-numeric:tabular-nums}
+.ctl input{grid-column:1/-1;width:100%;margin:0;height:26px}
+.ctl.gamma input{accent-color:var(--gamma)} .ctl.gamma output,.ctl.gamma label>i{color:var(--gamma)}
+.ctl.phi input{accent-color:var(--phi)} .ctl.phi output,.ctl.phi label>i{color:var(--phi)}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.row .lbl{font:600 12px var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--raise);border:1px solid var(--line);color:var(--ink);
+  border-radius:6px;padding:6px 11px;font:600 14px/1.2 var(--f-ui);cursor:pointer}
+.btn:hover{border-color:var(--faint)}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--e);outline-offset:2px}
+.btn[aria-pressed="true"]{border-color:var(--e);color:var(--e)}
+.btn.primary{border-color:var(--e);color:var(--e)}
+.btn svg{flex:none}
+.btn .sub{font:400 12px var(--f-math);color:var(--muted)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;padding:4px 6px}
+.chk input{margin:0;width:16px;height:16px}
+.spacer{flex:1}
+#speed{width:110px;accent-color:var(--muted)}
+
+/* readout */
+.readout{padding:16px 18px;display:grid;gap:14px}
+.state{font:400 28px/1.15 var(--f-math);text-wrap:balance}
+.statesub{color:var(--muted);font-size:15px;margin-top:4px}
+dl.nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;margin:0}
+dl.nums div{display:grid;gap:2px;border-top:1px solid var(--line);padding-top:8px}
+dl.nums dt{font-size:13px;color:var(--muted)}
+dl.nums dd{margin:0;font:500 17px var(--f-num);font-variant-numeric:tabular-nums}
+.eqs{font:18px/1.7 var(--f-math);overflow-x:auto;white-space:nowrap;border-top:1px solid var(--line);padding-top:10px}
+.why{display:grid;gap:10px;font-size:15px;border-top:1px solid var(--line);padding-top:12px}
+.why p{margin:0}
+.why b{font-family:var(--f-math);font-style:italic;font-weight:400;font-size:18px}
+.note{font-size:13px;color:var(--muted);max-width:110ch;margin:0}
+.note i{font-family:var(--f-math)}
+
+@media (max-width:900px){
+  .stage,.lower{grid-template-columns:1fr}
+  .sliders{grid-template-columns:1fr}
+}
+@media (max-width:600px){ #cmap{aspect-ratio:4/3} }
+@media (max-width:480px){
+  .wrap{padding-inline:16px}
+  dl.nums{grid-template-columns:1fr 1fr}
+  .state{font-size:24px}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Lab EM waves · §1.3 Polarisation · equation (3)</div>
+    <h1>Polarisation from <i class="cg">γ</i> and <i class="cp">φ</i></h1>
+    <p class="formula m"><b>E</b>(<i>z</i>) = |<i>E</i>| ( <span class="cx">cos <i class="cg">γ</i> <b>1</b><sub><i>x</i></sub></span> + <span class="cy">sin <i class="cg">γ</i> e<sup><i>j</i><i class="cp">φ</i></sup> <b>1</b><sub><i>y</i></sub></span> ) e<sup>−<i>jkz</i></sup></p>
+    <p class="lede">Two perpendicular waves with the same frequency, added together. <i class="m cg">γ</i> decides how the amplitude is shared between the <span class="cx">x-wave</span> and the <span class="cy">y-wave</span>. <i class="m cp">φ</i> shifts the y-wave in time relative to the x-wave. The tip of their <span class="ce">sum</span> traces a line, a circle or an ellipse: that shape is the polarisation.</p>
+  </header>
+
+  <section class="stage">
+    <figure class="card">
+      <div class="cardhead">
+        <span class="tag">The wave in space</span><span class="hint">drag to rotate</span>
+        <div class="seg row" role="group" aria-label="Camera">
+          <button class="btn" id="camOblique" type="button">3D view</button>
+          <button class="btn" id="camFront" type="button">Look down the z-axis</button>
+        </div>
+      </div>
+      <div class="canvasbox"><canvas id="c3d" aria-label="3D view of the x-component, y-component and total electric field along z"></canvas><div id="caption" class="caption" aria-live="polite"></div></div>
+      <figcaption class="legend">
+        <span><span class="dot" style="background:var(--ex)"></span><span class="m"><i>E<sub>x</sub></i> = |<i>E</i>| cos <i class="cg">γ</i> cos(<i>ωt</i> − <i>kz</i>)</span></span>
+        <span><span class="dot" style="background:var(--ey)"></span><span class="m"><i>E<sub>y</sub></i> = |<i>E</i>| sin <i class="cg">γ</i> cos(<i>ωt</i> − <i>kz</i> + <i class="cp">φ</i>)</span></span>
+        <span><span class="dot" style="background:var(--e)"></span>total field <span class="m"><b>E</b> = <i>E<sub>x</sub></i><b>1</b><sub><i>x</i></sub> + <i>E<sub>y</sub></i><b>1</b><sub><i>y</i></sub></span></span>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="cardhead"><span class="tag">Tip of <span class="m"><b>E</b></span> at z = 0</span><span class="hint">facing the wave, +z points at you</span></div>
+      <div class="canvasbox"><canvas id="cxy" aria-label="End-on view: rotating phasors projecting onto the x and y axes, and the traced polarisation ellipse"></canvas></div>
+      <figcaption>Each component is the shadow of a rotating phasor. The <span class="cy">y-phasor</span> runs <i class="m cp">φ</i> ahead of the <span class="cx">x-phasor</span> (negative <i class="m cp">φ</i>: it lags). The <span class="cg">dashed box</span> has sides 2 cos <i class="m cg">γ</i> by 2 sin <i class="m cg">γ</i>; the tip never leaves it.</figcaption>
+    </figure>
+  </section>
+
+  <section class="card controls" aria-label="Controls">
+    <div class="sliders">
+      <div class="ctl gamma">
+        <label for="gamma"><i>γ</i>sets the amplitudes: <span class="m">tan <i>γ</i> = <i>E<sub>y</sub></i> / <i>E<sub>x</sub></i></span></label>
+        <output id="gammaOut" for="gamma">45.0°</output>
+        <input type="range" id="gamma" min="0" max="90" step="0.5" value="45">
+      </div>
+      <div class="ctl phi">
+        <label for="phi"><i>φ</i>sets the phase of <span class="m"><i>E<sub>y</sub></i></span> relative to <span class="m"><i>E<sub>x</sub></i></span></label>
+        <output id="phiOut" for="phi">−90°</output>
+        <input type="range" id="phi" min="-180" max="180" step="1" value="-90">
+      </div>
+    </div>
+    <div class="row" role="group" aria-label="Presets">
+      <span class="lbl">Presets</span>
+      <button class="btn preset" type="button" data-g="0" data-p="0">Linear along x</button>
+      <button class="btn preset" type="button" data-g="45" data-p="0">Linear at 45°</button>
+      <button class="btn preset" type="button" data-g="45" data-p="180">Linear at −45°</button>
+      <button class="btn preset" type="button" data-g="45" data-p="-90">Right-hand circular <span class="sub">lab example</span></button>
+      <button class="btn preset" type="button" data-g="45" data-p="90">Left-hand circular</button>
+      <button class="btn preset" type="button" data-g="30" data-p="-60">Elliptical</button>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="build" type="button">Build the wave step by step</button>
+      <button class="btn" id="play" type="button" aria-pressed="false">Pause</button>
+      <label class="chk" for="speed">Speed <input type="range" id="speed" min="0.25" max="2" step="0.25" value="1"></label>
+      <span class="spacer"></span>
+      <span class="lbl">Show</span>
+      <label class="chk cx" for="showEx"><input type="checkbox" id="showEx" checked> <span class="m"><i>E<sub>x</sub></i></span></label>
+      <label class="chk cy" for="showEy"><input type="checkbox" id="showEy" checked> <span class="m"><i>E<sub>y</sub></i></span></label>
+      <label class="chk ce" for="showE"><input type="checkbox" id="showE" checked> <span class="m"><b>E</b></span></label>
+      <label class="chk" for="showTrace"><input type="checkbox" id="showTrace" checked> trace at z = 0</label>
+    </div>
+  </section>
+
+  <section class="lower">
+    <figure class="card">
+      <div class="cardhead"><span class="tag">Every polarisation state</span><span class="hint">click or drag to pick <i class="m cg">γ</i> and <i class="m cp">φ</i></span></div>
+      <div class="canvasbox"><canvas id="cmap" aria-label="Map of polarisation ellipses over phi (horizontal) and gamma (vertical)"></canvas></div>
+      <figcaption>Each small shape is the trace for that pair (<i class="m cp">φ</i>, <i class="m cg">γ</i>). Moving up changes the amplitude split. Moving sideways changes the timing between the components. The yellow lines are linear polarisation; the two rings are the only circular states.</figcaption>
+    </figure>
+
+    <aside class="card readout" aria-live="polite">
+      <div>
+        <div class="state" id="state">Right-hand circular</div>
+        <div class="statesub" id="stateSub"></div>
+      </div>
+      <dl class="nums">
+        <div><dt>x-amplitude <span class="m">cos <i>γ</i></span></dt><dd id="ampx" class="cx">0.707</dd></div>
+        <div><dt>y-amplitude <span class="m">sin <i>γ</i></span></dt><dd id="ampy" class="cy">0.707</dd></div>
+        <div><dt>Tilt of major axis <span class="m"><i>τ</i></span></dt><dd id="tilt">—</dd></div>
+        <div><dt>Axial ratio (major / minor)</dt><dd id="ar">1.00</dd></div>
+      </dl>
+      <div class="eqs" id="eqs"></div>
+      <div class="why">
+        <p id="whyGamma"></p>
+        <p id="whyPhi"></p>
+      </div>
+    </aside>
+  </section>
+
+  <p class="note">Conventions as in the lab text: phasors use <i>e</i><sup><i>jωt</i></sup>, so <b>E</b>(<i>z</i>,<i>t</i>) = Re{<b>E</b>(<i>z</i>) <i>e</i><sup><i>jωt</i></sup>} with |<i>E</i>| = 1. Handedness follows the IEEE rule: point your right thumb along +<i>z</i>; if your fingers curl the way the tip turns, the wave is right-handed. That makes <i>γ</i> = π/4, <i>φ</i> = −π/2 right-hand circular, as in figure 4b. In the end-on view +<i>z</i> points at you, so right-handed tips turn counterclockwise there.</p>
+</div>
+
+<script>
+(() => {
+const DEG = Math.PI / 180, TAU = Math.PI * 2, HALF = Math.PI / 2;
+const PERIOD = 2.6;                 // seconds per oscillation at speed 1
+const LAMBDA = 2.6;                 // world units per wavelength in the 3D view
+const NWAVE = 2;                    // wavelengths drawn
+const ZLEN = LAMBDA * NWAVE;
+
+const css = getComputedStyle(document.documentElement);
+const C = {};
+['bg', 'panel', 'line', 'ink', 'muted', 'faint', 'ex', 'ey', 'e', 'gamma', 'phi', 'rh', 'lh']
+  .forEach(k => { C[k] = css.getPropertyValue('--' + k).trim(); });
+const FM = css.getPropertyValue('--f-math').trim();
+const FU = css.getPropertyValue('--f-ui').trim();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const CAM = {
+  oblique: { yaw: 62 * DEG, pitch: 21 * DEG },
+  front: { yaw: 0, pitch: 0 },
+};
+
+// Shared state. g = γ and p = φ in radians; wt = ωt.
+const S = {
+  g: 45 * DEG, p: -90 * DEG, wt: 0.6,
+  playing: !reduce, speed: 1,
+  vis: { ex: 1, ey: 1, e: 1, trace: 1 },
+  yaw: CAM.oblique.yaw, pitch: CAM.oblique.pitch,
+};
+
+/* ---------- tweens (3b1b "smooth" rate function) ---------- */
+const smooth = x => x * x * x * (10 - 15 * x + 6 * x * x);
+const tweens = [];
+function tween(obj, key, to, ms) {
+  for (let i = tweens.length - 1; i >= 0; i--)
+    if (tweens[i].obj === obj && tweens[i].key === key) { tweens[i].res(); tweens.splice(i, 1); }
+  if (reduce || ms <= 0 || obj[key] === to) { obj[key] = to; return Promise.resolve(); }
+  return new Promise(res => tweens.push({ obj, key, from: obj[key], to, ms, t0: performance.now(), res }));
+}
+function cancelTween(obj, key) {
+  for (let i = tweens.length - 1; i >= 0; i--)
+    if (tweens[i].obj === obj && tweens[i].key === key) { tweens[i].res(); tweens.splice(i, 1); }
+}
+function stepTweens(now) {
+  for (let i = tweens.length - 1; i >= 0; i--) {
+    const tw = tweens[i];
+    const x = Math.min(1, (now - tw.t0) / tw.ms);
+    tw.obj[tw.key] = tw.from + (tw.to - tw.from) * smooth(x);
+    if (x >= 1) { tweens.splice(i, 1); tw.res(); }
+  }
+}
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 1200) : ms));
+
+/* ---------- physics ---------- */
+// Instantaneous field for phase ph = ωt − kz, with |E| = 1.
+function field(g, p, ph) { return [Math.cos(g) * Math.cos(ph), Math.sin(g) * Math.cos(ph + p)]; }
+
+// Ellipse parameters. tan 2τ = tan 2γ cos φ, sin 2χ = −sin 2γ sin φ (χ > 0: right-handed here).
+function describe(g, p) {
+  const s2 = Math.sin(2 * g), c2 = Math.cos(2 * g);
+  const tau = 0.5 * Math.atan2(s2 * Math.cos(p), c2);
+  const chi = 0.5 * Math.asin(Math.max(-1, Math.min(1, -s2 * Math.sin(p))));
+  const t = Math.abs(Math.tan(chi));
+  const ar = t < 1e-6 ? Infinity : 1 / t;
+  const chiDeg = Math.abs(chi) / DEG;
+  const kind = chiDeg < 0.3 ? 'linear' : chiDeg > 44.7 ? 'circular' : 'elliptical';
+  const hand = kind === 'linear' ? null : (chi > 0 ? 'right' : 'left');
+  return { tau, chi, ar, kind, hand };
+}
+
+/* ---------- formatting ---------- */
+const MINUS = '−';
+const sgn = s => s.replace(/-/g, MINUS);
+function piFrac(rad) {
+  const r = rad / Math.PI;
+  if (Math.abs(r) < 1e-4) return '0';
+  for (const d of [1, 2, 3, 4, 6, 8, 12]) {
+    const n = Math.round(r * d);
+    if (Math.abs(r * d - n) < 2e-3) {
+      const neg = n < 0 ? MINUS : '', a = Math.abs(n);
+      return neg + (a === 1 ? '' : a) + 'π' + (d === 1 ? '' : '/' + d);
+    }
+  }
+  return sgn((r).toFixed(2)) + 'π';
+}
+const fmtDeg = (rad, digits = 0) => sgn((rad / DEG).toFixed(digits)) + '°';
+const f3 = v => sgn(v.toFixed(3));
+
+/* ---------- canvas helpers ---------- */
+function setupCanvas(id) {
+  const cv = document.getElementById(id);
+  const o = { cv, ctx: cv.getContext('2d'), w: 0, h: 0, dirty: true };
+  const fit = () => {
+    const r = cv.getBoundingClientRect();
+    const d = Math.min(2, window.devicePixelRatio || 1);
+    o.w = r.width; o.h = r.height;
+    cv.width = Math.max(1, Math.round(r.width * d));
+    cv.height = Math.max(1, Math.round(r.height * d));
+    o.ctx.setTransform(d, 0, 0, d, 0, 0);
+    o.dirty = true;
+  };
+  new ResizeObserver(fit).observe(cv);
+  fit();
+  return o;
+}
+function alpha(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${Math.max(0, Math.min(1, a))})`;
+}
+function line(ctx, x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
+// Straight arrow with a filled head; head shrinks for short arrows.
+function arrow(ctx, x1, y1, x2, y2, color, width, head = 10) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round';
+  if (L < 0.5) return;
+  const h = Math.min(head, L * 0.45), ux = dx / L, uy = dy / L;
+  line(ctx, x1, y1, x2 - ux * h * 0.7, y2 - uy * h * 0.7);
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - ux * h - uy * h * 0.42, y2 - uy * h + ux * h * 0.42);
+  ctx.lineTo(x2 - ux * h + uy * h * 0.42, y2 - uy * h - ux * h * 0.42);
+  ctx.closePath(); ctx.fill();
+}
+function headAt(ctx, x, y, dx, dy, color, h = 9) {
+  const L = Math.hypot(dx, dy); if (L < 1e-9) return;
+  const ux = dx / L, uy = dy / L;
+  ctx.fillStyle = color; ctx.beginPath();
+  ctx.moveTo(x + ux * h * 0.6, y + uy * h * 0.6);
+  ctx.lineTo(x - ux * h * 0.5 - uy * h * 0.45, y - uy * h * 0.5 + ux * h * 0.45);
+  ctx.lineTo(x - ux * h * 0.5 + uy * h * 0.45, y - uy * h * 0.5 - ux * h * 0.45);
+  ctx.closePath(); ctx.fill();
+}
+// Label like "E_x": main letter italic, optional subscript.
+function mathLabel(ctx, txt, sub, x, y, color, size = 18, align = 'center') {
+  ctx.fillStyle = color; ctx.textBaseline = 'middle';
+  ctx.font = `italic ${size}px ${FM}`;
+  const w1 = ctx.measureText(txt).width;
+  ctx.font = `italic ${Math.round(size * 0.68)}px ${FM}`;
+  const w2 = sub ? ctx.measureText(sub).width : 0;
+  let x0 = align === 'center' ? x - (w1 + w2) / 2 : align === 'right' ? x - w1 - w2 : x;
+  ctx.textAlign = 'left';
+  ctx.font = `italic ${size}px ${FM}`; ctx.fillText(txt, x0, y);
+  if (sub) { ctx.font = `italic ${Math.round(size * 0.68)}px ${FM}`; ctx.fillText(sub, x0 + w1 + 1, y + size * 0.28); }
+}
+
+/* ================= 3D view ================= */
+const V3 = setupCanvas('c3d');
+
+// Orthographic camera: yaw about world y, then pitch. yaw = pitch = 0 looks down −z (x right, y up).
+function makeProjector(o) {
+  const ca = Math.cos(S.yaw), sa = Math.sin(S.yaw), cb = Math.cos(S.pitch), sb = Math.sin(S.pitch);
+  const zc = ZLEN / 2;
+  const rot = (x, y, z) => {
+    const Z = z - zc;
+    const X1 = x * ca + Z * sa, Z1 = -x * sa + Z * ca;
+    return [X1, y * cb - Z1 * sb, y * sb + Z1 * cb];
+  };
+  // fit the scene's bounding box to the canvas, so the camera zooms in when looking down z
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const x of [-1.35, 1.35]) for (const y of [-1.35, 1.35]) for (const z of [-0.3, ZLEN + 0.6]) {
+    const r = rot(x, y, z);
+    x0 = Math.min(x0, r[0]); x1 = Math.max(x1, r[0]); y0 = Math.min(y0, r[1]); y1 = Math.max(y1, r[1]);
+  }
+  const s = Math.min(o.w * 0.9 / (x1 - x0), o.h * 0.84 / (y1 - y0), o.h / 3.1);
+  const ox = o.w / 2 - s * (x0 + x1) / 2, oy = o.h / 2 + s * (y0 + y1) / 2;
+  const P = (x, y, z) => { const r = rot(x, y, z); return [ox + r[0] * s, oy - r[1] * s, r[2]]; };
+  P.s = s;
+  return P;
+}
+
+function polyline(ctx, pts) {
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.stroke();
+}
+
+function draw3D() {
+  const o = V3, ctx = o.ctx;
+  if (!o.w) return;
+  ctx.clearRect(0, 0, o.w, o.h);
+  const P = makeProjector(o);
+  const { g, p, wt, vis } = S;
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+
+  // observation plane z = 0
+  const q = [[-1.25, -1.25], [1.25, -1.25], [1.25, 1.25], [-1.25, 1.25]].map(([x, y]) => P(x, y, 0));
+  ctx.beginPath(); q.forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1])); ctx.closePath();
+  ctx.fillStyle = alpha(C.ink, 0.035); ctx.fill();
+  ctx.strokeStyle = alpha(C.ink, 0.14); ctx.lineWidth = 1; ctx.stroke();
+  ctx.font = `13px ${FU}`; ctx.fillStyle = C.faint; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('z = 0', q[0][0] + 4, q[0][1] - 5);
+
+  // axes
+  const axisCol = alpha(C.muted, 0.75);
+  const za = P(0, 0, -0.3), zb = P(0, 0, ZLEN + 0.6), O = P(0, 0, 0);
+  const zLenPx = Math.hypot(zb[0] - za[0], zb[1] - za[1]);
+  if (zLenPx > 40) {
+    arrow(ctx, za[0], za[1], zb[0], zb[1], axisCol, 1.5, 11);
+    const dz = [(zb[0] - za[0]) / zLenPx, (zb[1] - za[1]) / zLenPx];
+    mathLabel(ctx, 'z', '', zb[0] + dz[0] * 16, zb[1] + dz[1] * 16, C.muted, 20);
+    // wavelength ticks
+    ctx.strokeStyle = alpha(C.muted, 0.5); ctx.lineWidth = 1;
+    for (let k = 1; k <= NWAVE; k++) {
+      const t = P(0, 0, k * LAMBDA), t2 = P(0, -0.12, k * LAMBDA);
+      line(ctx, t[0], t[1], t2[0], t2[1]);
+      ctx.font = `italic 15px ${FM}`; ctx.fillStyle = C.faint; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText((k === 1 ? '' : k) + 'λ', t2[0], t2[1] + 3);
+    }
+  } else {
+    // z points straight at the viewer: draw the "out of the screen" symbol
+    ctx.strokeStyle = C.muted; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(O[0], O[1], 8, 0, TAU); ctx.stroke();
+    ctx.fillStyle = C.muted; ctx.beginPath(); ctx.arc(O[0], O[1], 2.5, 0, TAU); ctx.fill();
+    mathLabel(ctx, 'z', '', O[0] - 16, O[1] + 16, C.muted, 18);
+  }
+  const xa = P(-1.35, 0, 0), xb = P(1.5, 0, 0), ya = P(0, -1.35, 0), yb = P(0, 1.5, 0);
+  arrow(ctx, xa[0], xa[1], xb[0], xb[1], axisCol, 1.5, 10);
+  arrow(ctx, ya[0], ya[1], yb[0], yb[1], axisCol, 1.5, 10);
+  const lab = (a, b, t) => { const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [b[0] + (b[0] - a[0]) / L * 14, b[1] + (b[1] - a[1]) / L * 14]; };
+  let lx = lab(xa, xb), ly = lab(ya, yb);
+  mathLabel(ctx, 'x', '', lx[0], lx[1], C.muted, 20);
+  mathLabel(ctx, 'y', '', ly[0], ly[1], C.muted, 20);
+
+  // sample the wave
+  const N = 200, STEP = 5;
+  const ax = [], ex = [], ey = [], ee = [], depth = [];
+  for (let i = 0; i <= N; i++) {
+    const z = ZLEN * i / N;
+    const [fx, fy] = field(g, p, wt - TAU * z / LAMBDA);
+    ax.push(P(0, 0, z)); ex.push(P(fx, 0, z)); ey.push(P(0, fy, z));
+    const t = P(fx, fy, z); ee.push(t); depth.push(t[2]);
+  }
+
+  const comp = (pts, col, a) => {
+    if (a < 0.01) return;
+    ctx.strokeStyle = alpha(col, 0.3 * a); ctx.lineWidth = 1;
+    for (let i = 0; i <= N; i += STEP) line(ctx, ax[i][0], ax[i][1], pts[i][0], pts[i][1]);
+    ctx.strokeStyle = alpha(col, a); ctx.lineWidth = 2.4; polyline(ctx, pts);
+  };
+  comp(ex, C.ex, vis.ex);
+  comp(ey, C.ey, vis.ey);
+
+  if (vis.e > 0.01) {
+    const idx = [];
+    for (let i = STEP; i <= N; i += STEP) idx.push(i);
+    idx.sort((a, b) => depth[a] - depth[b]);
+    for (const i of idx) arrow(ctx, ax[i][0], ax[i][1], ee[i][0], ee[i][1], alpha(C.e, 0.62 * vis.e), 1.5, 7);
+    ctx.strokeStyle = alpha(C.e, vis.e); ctx.lineWidth = 2.6; polyline(ctx, ee);
+  }
+
+  // what happens in the plane z = 0
+  if (vis.trace > 0.01) {
+    const tr = [];
+    for (let k = 0; k <= 128; k++) { const [fx, fy] = field(g, p, TAU * k / 128); tr.push(P(fx, fy, 0)); }
+    ctx.strokeStyle = alpha(C.e, 0.55 * vis.trace); ctx.lineWidth = 1.6; polyline(ctx, tr);
+  }
+  const [fx0, fy0] = field(g, p, wt);
+  const X0 = P(fx0, 0, 0), Y0 = P(0, fy0, 0), T0 = P(fx0, fy0, 0);
+  const k0 = Math.max(vis.trace, vis.e);
+  if (k0 > 0.01) {
+    ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+    ctx.strokeStyle = alpha(C.ex, 0.6 * k0); line(ctx, Y0[0], Y0[1], T0[0], T0[1]);
+    ctx.strokeStyle = alpha(C.ey, 0.6 * k0); line(ctx, X0[0], X0[1], T0[0], T0[1]);
+    ctx.setLineDash([]);
+  }
+  if (vis.ex > 0.01) arrow(ctx, O[0], O[1], X0[0], X0[1], alpha(C.ex, vis.ex), 3, 11);
+  if (vis.ey > 0.01) arrow(ctx, O[0], O[1], Y0[0], Y0[1], alpha(C.ey, vis.ey), 3, 11);
+  if (k0 > 0.01) {
+    arrow(ctx, O[0], O[1], T0[0], T0[1], alpha(C.e, k0), 3.4, 13);
+    ctx.fillStyle = alpha(C.e, k0); ctx.beginPath(); ctx.arc(T0[0], T0[1], 3.5, 0, TAU); ctx.fill();
+  }
+}
+
+// drag to orbit
+{
+  const cv = V3.cv; let drag = null;
+  cv.addEventListener('pointerdown', e => {
+    drag = { x: e.clientX, y: e.clientY, yaw: S.yaw, pitch: S.pitch };
+    cancelTween(S, 'yaw'); cancelTween(S, 'pitch');
+    cv.setPointerCapture(e.pointerId);
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!drag) return;
+    S.yaw = drag.yaw + (e.clientX - drag.x) * 0.008;
+    S.pitch = Math.max(-80 * DEG, Math.min(80 * DEG, drag.pitch + (e.clientY - drag.y) * 0.008));
+  });
+  const end = () => { drag = null; };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+}
+
+/* ================= end-on view with phasors ================= */
+const VXY = setupCanvas('cxy');
+
+// Draw a run of text segments: {t, i (italic), sub, c (color)}
+function drawRich(ctx, segs, x, y, size, color) {
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  let cx = x;
+  for (const s of segs) {
+    const sz = s.sub ? Math.round(size * 0.68) : size;
+    ctx.font = `${s.i ? 'italic ' : ''}${sz}px ${FM}`;
+    ctx.fillStyle = s.c || color;
+    ctx.fillText(s.t, cx, s.sub ? y + size * 0.28 : y);
+    cx += ctx.measureText(s.t).width + (s.sub ? 1 : 0);
+  }
+  return cx;
+}
+
+function drawXY() {
+  const o = VXY, ctx = o.ctx, W = o.w, H = o.h;
+  if (!W) return;
+  ctx.clearRect(0, 0, W, H);
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  const { g, p, wt, vis } = S;
+  const m = W * 0.045, R = W * 0.2;
+  const px = W - m - R, py = H - m - R;     // plot centre
+  const xcx = px, xcy = m + R;              // x-phasor circle (above the plot)
+  const ycx = m + R, ycy = py;              // y-phasor circle (left of the plot)
+  const ax = Math.cos(g), ay = Math.sin(g);
+  const thx = wt, thy = wt + p;
+  const D = describe(g, p);
+  const fs = Math.max(12, Math.min(17, W * 0.032));
+
+  // ---- legend in the free corner
+  const L = m + 2;
+  drawRich(ctx, [{ t: 'E', i: 1 }, { t: 'x', i: 1, sub: 1 }, { t: ' = cos ' }, { t: 'γ', i: 1, c: C.gamma }, { t: ' cos ' }, { t: 'ωt', i: 1 }], L, m + fs * 0.7, fs, C.ex);
+  drawRich(ctx, [{ t: 'E', i: 1 }, { t: 'y', i: 1, sub: 1 }, { t: ' = sin ' }, { t: 'γ', i: 1, c: C.gamma }, { t: ' cos(' }, { t: 'ωt', i: 1 }, { t: ' + ' }, { t: 'φ', i: 1, c: C.phi }, { t: ')' }], L, m + fs * 2.2, fs, C.ey);
+  const pd = Math.round(p / DEG);
+  const rel = Math.abs(pd) < 1 ? 'in step with' : Math.abs(Math.abs(pd) - 180) < 1 ? 'opposite to' : (pd < 0 ? `${Math.abs(pd)}° behind` : `${pd}° ahead of`);
+  drawRich(ctx, [{ t: 'E', i: 1 }, { t: 'y', i: 1, sub: 1 }, { t: ' is ' + rel + ' ' }, { t: 'E', i: 1 }, { t: 'x', i: 1, sub: 1 }], L, m + fs * 3.7, fs * 0.92, C.phi);
+
+  // ---- plot: axes, unit circle, γ box
+  const axisCol = alpha(C.muted, 0.7);
+  arrow(ctx, px - R - 10, py, px + R + 12, py, axisCol, 1.3, 9);
+  arrow(ctx, px, py + R + 10, px, py - R - 18, axisCol, 1.3, 9);
+  mathLabel(ctx, 'x', '', px + R + 6, py + 16, C.muted, 18);
+  mathLabel(ctx, 'y', '', px + 1, py - R - 28, C.muted, 18);
+  ctx.setLineDash([2, 5]); ctx.strokeStyle = alpha(C.muted, 0.28); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(px, py, R, 0, TAU); ctx.stroke();
+  ctx.setLineDash([5, 5]); ctx.strokeStyle = alpha(C.gamma, 0.55); ctx.lineWidth = 1.2;
+  ctx.strokeRect(px - R * ax, py - R * ay, 2 * R * ax, 2 * R * ay);
+  line(ctx, px, py, px + R * ax, py - R * ay);
+  ctx.setLineDash([]);
+  if (g > 2 * DEG && g < 88 * DEG) {
+    const ra = R * 0.3;
+    ctx.strokeStyle = C.gamma; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(px, py, ra, 0, -g, true); ctx.stroke();
+    mathLabel(ctx, 'γ', '', px + (ra + 11) * Math.cos(g / 2), py - (ra + 11) * Math.sin(g / 2), C.gamma, 17);
+  }
+
+  // ---- the full trace and its sense of rotation
+  const at = ph => [px + R * ax * Math.cos(ph), py - R * ay * Math.cos(ph + p)];
+  if (vis.trace > 0.01) {
+    ctx.strokeStyle = alpha(C.e, 0.32 * vis.trace); ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let k = 0; k <= 140; k++) { const q = at(TAU * k / 140); k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }
+    ctx.stroke();
+    if (D.kind !== 'linear') for (const ph of [HALF, 3 * HALF]) {
+      const q = at(ph);
+      headAt(ctx, q[0], q[1], -R * ax * Math.sin(ph), R * ay * Math.sin(ph + p), alpha(C.e, 0.85 * vis.trace), 11);
+    }
+    // fading trail of the last ~0.9 period
+    const K = 70;
+    for (let k = K; k > 0; k--) {
+      const a = at(wt - 0.9 * TAU * k / K), b = at(wt - 0.9 * TAU * (k - 1) / K);
+      ctx.strokeStyle = alpha(C.e, (1 - k / K) * 0.95 * vis.trace); ctx.lineWidth = 3.2;
+      line(ctx, a[0], a[1], b[0], b[1]);
+    }
+  }
+
+  // ---- phasor circles
+  const xdot = [xcx + R * ax * Math.cos(thx), xcy - R * ax * Math.sin(thx)];
+  const ydot = [ycx - R * ay * Math.sin(thy), ycy - R * ay * Math.cos(thy)];
+  const ex = ax * Math.cos(wt), ey = ay * Math.cos(wt + p);
+  const tip = [px + R * ex, py - R * ey];
+
+  ctx.strokeStyle = alpha(C.muted, 0.22); ctx.lineWidth = 1;
+  line(ctx, xcx - R, xcy, xcx + R, xcy);
+  line(ctx, ycx, ycy - R, ycx, ycy + R);
+  ctx.font = `13px ${FU}`; ctx.fillStyle = C.faint; ctx.textBaseline = 'alphabetic';
+  ctx.textAlign = 'left'; ctx.fillText('x-phasor', xcx - R, xcy - R + 12);
+  ctx.fillText('y-phasor', ycx - R, ycy + R);
+
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = alpha(C.ex, vis.ex * 0.5); ctx.beginPath(); ctx.arc(xcx, xcy, R * ax, 0, TAU); ctx.stroke();
+  ctx.strokeStyle = alpha(C.ey, vis.ey * 0.5); ctx.beginPath(); ctx.arc(ycx, ycy, R * ay, 0, TAU); ctx.stroke();
+
+  // φ: where the y-phasor would be if φ = 0 (ghost), and the arc to where it really is
+  if (vis.ey > 0.01) {
+    const gl = Math.max(R * ay, R * 0.3);
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = alpha(C.ey, 0.45 * vis.ey); ctx.lineWidth = 1.2;
+    line(ctx, ycx, ycy, ycx - gl * Math.sin(thx), ycy - gl * Math.cos(thx));
+    ctx.setLineDash([]);
+    if (Math.abs(p) > 3 * DEG) {
+      const ra = Math.max(R * ay * 0.55, R * 0.24);
+      ctx.strokeStyle = C.phi; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(ycx, ycy, ra, -HALF - thx, -HALF - thy, p > 0); ctx.stroke();
+      const end = -HALF - thy;
+      headAt(ctx, ycx + ra * Math.cos(end), ycy + ra * Math.sin(end),
+        (p > 0 ? 1 : -1) * Math.sin(end), (p > 0 ? -1 : 1) * Math.cos(end), C.phi, 9);
+      const mid = -HALF - (thx + p / 2);
+      mathLabel(ctx, 'φ', '', ycx + (ra + 13) * Math.cos(mid), ycy + (ra + 13) * Math.sin(mid), C.phi, 18);
+    }
+  }
+
+  // projection guides from phasor tips to the field tip
+  ctx.setLineDash([3, 4]); ctx.lineWidth = 1.1;
+  if (vis.ex > 0.01) { ctx.strokeStyle = alpha(C.ex, 0.55 * vis.ex); line(ctx, xdot[0], xdot[1], tip[0], tip[1]); }
+  if (vis.ey > 0.01) { ctx.strokeStyle = alpha(C.ey, 0.55 * vis.ey); line(ctx, ydot[0], ydot[1], tip[0], tip[1]); }
+  ctx.setLineDash([]);
+
+  if (vis.ex > 0.01) {
+    arrow(ctx, xcx, xcy, xdot[0], xdot[1], alpha(C.ex, vis.ex), 2.4, 10);
+    arrow(ctx, px, py, tip[0], py, alpha(C.ex, vis.ex), 3, 11);
+  }
+  if (vis.ey > 0.01) {
+    arrow(ctx, ycx, ycy, ydot[0], ydot[1], alpha(C.ey, vis.ey), 2.4, 10);
+    arrow(ctx, px, py, px, tip[1], alpha(C.ey, vis.ey), 3, 11);
+  }
+  const ke = Math.max(vis.e, vis.trace);
+  if (ke > 0.01) {
+    arrow(ctx, px, py, tip[0], tip[1], alpha(C.e, ke), 3.4, 13);
+    ctx.fillStyle = alpha(C.e, ke); ctx.beginPath(); ctx.arc(tip[0], tip[1], 4, 0, TAU); ctx.fill();
+  }
+
+  // sense of rotation, bottom-right of the plot
+  if (D.kind !== 'linear') {
+    const col = D.hand === 'right' ? C.rh : C.lh;
+    ctx.font = `600 13px ${FU}`; ctx.fillStyle = col; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(D.hand === 'right' ? 'RIGHT-HANDED ↺' : 'LEFT-HANDED ↻', W - m + 4, H - 6);
+  } else {
+    ctx.font = `600 13px ${FU}`; ctx.fillStyle = C.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('LINEAR', W - m + 4, H - 6);
+  }
+}
+
+/* ================= γ–φ map ================= */
+const VM = setupCanvas('cmap');
+const MAP_G = [0, 15, 30, 45, 60, 75, 90], MAP_P = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
+
+function mapGeom(o) {
+  const L = 66, Rr = 16, T = 34, B = 46;
+  const pw = o.w - L - Rr, ph = o.h - T - B;
+  const r = Math.max(6, Math.min(pw / 8, ph / 6) * 0.36);
+  const ins = r + 6;
+  const X = v => L + ins + (v + Math.PI) / TAU * (pw - 2 * ins);
+  const Y = v => T + ins + (1 - v / HALF) * (ph - 2 * ins);
+  const invX = x => (x - L - ins) / (pw - 2 * ins) * TAU - Math.PI;
+  const invY = y => (1 - (y - T - ins) / (ph - 2 * ins)) * HALF;
+  return { L, T, pw, ph, r, X, Y, invX, invY };
+}
+
+function glyph(ctx, cx, cy, r, g, p, col, w, head) {
+  const a = Math.cos(g), b = Math.sin(g);
+  ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath();
+  for (let k = 0; k <= 56; k++) {
+    const t = TAU * k / 56, x = cx + r * a * Math.cos(t), y = cy - r * b * Math.cos(t + p);
+    k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+  if (describe(g, p).kind !== 'linear')
+    headAt(ctx, cx, cy - r * b * Math.cos(HALF + p), -r * a, r * b * Math.sin(HALF + p), col, head);
+}
+
+function drawMap() {
+  const o = VM, ctx = o.ctx;
+  if (!o.w) return;
+  ctx.clearRect(0, 0, o.w, o.h);
+  const G = mapGeom(o), { L, T, pw, ph, r, X, Y } = G;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+  // handedness regions
+  ctx.fillStyle = alpha(C.rh, 0.07); ctx.fillRect(L, T, X(0) - L, ph);
+  ctx.fillStyle = alpha(C.lh, 0.07); ctx.fillRect(X(0), T, L + pw - X(0), ph);
+  ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, T + 0.5, pw - 1, ph - 1);
+  ctx.font = `600 12px ${FU}`; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
+  const wide = pw > 520;
+  ctx.fillStyle = C.rh; ctx.fillText(wide ? 'RIGHT-HANDED  (φ < 0)' : 'RIGHT (φ<0)', X(-HALF), T - 12);
+  ctx.fillStyle = C.lh; ctx.fillText(wide ? 'LEFT-HANDED  (φ > 0)' : 'LEFT (φ>0)', X(HALF), T - 12);
+  ctx.fillStyle = alpha(C.e, 0.85); ctx.fillText('LINEAR', X(0), T - 12);
+
+  // grid, then the linear lines
+  ctx.strokeStyle = alpha(C.ink, 0.06); ctx.lineWidth = 1;
+  for (const v of MAP_P) line(ctx, X(v * DEG), T, X(v * DEG), T + ph);
+  for (const v of MAP_G) line(ctx, L, Y(v * DEG), L + pw, Y(v * DEG));
+  ctx.strokeStyle = alpha(C.e, 0.3); ctx.lineWidth = 2;
+  for (const v of [-Math.PI, 0, Math.PI]) line(ctx, X(v), T, X(v), T + ph);
+  for (const v of [0, HALF]) line(ctx, L, Y(v), L + pw, Y(v));
+
+  // glyphs
+  for (const pd of MAP_P) for (const gd of MAP_G) {
+    const g = gd * DEG, p = pd * DEG, d = describe(g, p);
+    const col = d.kind === 'linear' ? alpha(C.ink, 0.6) : alpha(d.hand === 'right' ? C.rh : C.lh, 0.8);
+    glyph(ctx, X(p), Y(g), r, g, p, col, 1.4, Math.max(5, r * 0.4));
+  }
+  for (const s of [-1, 1]) {
+    ctx.strokeStyle = s < 0 ? C.rh : C.lh; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(X(s * HALF), Y(HALF / 2), r + 5, 0, TAU); ctx.stroke();
+  }
+
+  // ticks and axis names
+  ctx.fillStyle = C.muted; ctx.font = `15px ${FM}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (const v of [-Math.PI, -HALF, 0, HALF, Math.PI]) ctx.fillText(piFrac(v), X(v), T + ph + 6);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (const v of [0, HALF / 2, HALF]) ctx.fillText(piFrac(v), L - 8, Y(v));
+  drawRich(ctx, [{ t: 'φ', i: 1, c: C.phi }, { t: '  phase of ' }, { t: 'E', i: 1 }, { t: 'y', i: 1, sub: 1 }, { t: ' relative to ' }, { t: 'E', i: 1 }, { t: 'x', i: 1, sub: 1 }],
+    L + pw / 2 - 110, T + ph + 34, 15, C.muted);
+  mathLabel(ctx, 'γ', '', 14, T + ph / 2, C.gamma, 22);
+
+  // current state
+  const cx = X(S.p), cy = Y(S.g), R2 = r * 1.5;
+  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = alpha(C.phi, 0.75); line(ctx, cx, T, cx, T + ph);
+  ctx.strokeStyle = alpha(C.gamma, 0.75); line(ctx, L, cy, L + pw, cy);
+  ctx.fillStyle = alpha(C.panel, 0.92); ctx.beginPath(); ctx.arc(cx, cy, R2 + 5, 0, TAU); ctx.fill();
+  ctx.strokeStyle = C.e; ctx.lineWidth = 1.5; ctx.stroke();
+  glyph(ctx, cx, cy, R2, S.g, S.p, C.e, 2.2, Math.max(7, R2 * 0.4));
+}
+
+// click or drag on the map to choose (φ, γ); snaps near the grid values
+{
+  const cv = VM.cv; let dragging = false;
+  const pick = e => {
+    const G = mapGeom(VM), b = cv.getBoundingClientRect();
+    let pd = Math.max(-180, Math.min(180, G.invX(e.clientX - b.left) / DEG));
+    let gd = Math.max(0, Math.min(90, G.invY(e.clientY - b.top) / DEG));
+    const sp = Math.round(pd / 45) * 45; pd = Math.abs(pd - sp) < 5 ? sp : Math.round(pd);
+    const sg = Math.round(gd / 15) * 15; gd = Math.abs(gd - sg) < 2.5 ? sg : Math.round(gd * 2) / 2;
+    cancelTween(S, 'g'); cancelTween(S, 'p');
+    S.g = gd * DEG; S.p = pd * DEG;
+  };
+  cv.addEventListener('pointerdown', e => { dragging = true; cv.setPointerCapture(e.pointerId); pick(e); });
+  cv.addEventListener('pointermove', e => { if (dragging) pick(e); });
+  const end = () => { dragging = false; };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+}
+
+/* ================= controls, readout, build-up, loop ================= */
+const $ = id => document.getElementById(id);
+const gammaEl = $('gamma'), phiEl = $('phi'), playBtn = $('play'), buildBtn = $('build'), cap = $('caption');
+const boxes = { ex: $('showEx'), ey: $('showEy'), e: $('showE'), trace: $('showTrace') };
+const nicePi = rad => { const s = piFrac(rad); return s.includes('.') ? '' : s; };
+const handCol = h => h === 'right' ? 'var(--rh)' : h === 'left' ? 'var(--lh)' : 'var(--e)';
+const Ex = '<i>E</i><sub><i>x</i></sub>', Ey = '<i>E</i><sub><i>y</i></sub>';
+
+function setParams(gd, pd, ms = 1300) {
+  stopBuild(false);
+  tween(S, 'g', gd * DEG, ms); tween(S, 'p', pd * DEG, ms);
+}
+gammaEl.addEventListener('input', () => { cancelTween(S, 'g'); S.g = +gammaEl.value * DEG; });
+phiEl.addEventListener('input', () => { cancelTween(S, 'p'); S.p = +phiEl.value * DEG; });
+
+// presets, each with a small drawing of its own trace
+document.querySelectorAll('.preset').forEach(btn => {
+  const gd = +btn.dataset.g, pd = +btn.dataset.p, g = gd * DEG, p = pd * DEG, d = describe(g, p);
+  let path = '';
+  for (let k = 0; k <= 48; k++) {
+    const t = TAU * k / 48;
+    path += (k ? 'L' : 'M') + (11 + 8 * Math.cos(g) * Math.cos(t)).toFixed(2) + ' ' + (11 - 8 * Math.sin(g) * Math.cos(t + p)).toFixed(2);
+  }
+  btn.insertAdjacentHTML('afterbegin', `<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" style="color:${handCol(d.hand)}"><path d="${path}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`);
+  btn.addEventListener('click', () => setParams(gd, pd));
+});
+
+function updatePlay() { playBtn.textContent = S.playing ? 'Pause' : 'Play'; }
+playBtn.removeAttribute('aria-pressed');
+playBtn.addEventListener('click', () => { S.playing = !S.playing; updatePlay(); });
+$('speed').addEventListener('input', e => { S.speed = +e.target.value; });
+
+for (const k in boxes) boxes[k].addEventListener('change', () => {
+  stopBuild(false);
+  tween(S.vis, k, boxes[k].checked ? 1 : 0, 350);
+});
+
+function normYaw() { S.yaw = Math.atan2(Math.sin(S.yaw), Math.cos(S.yaw)); }
+function camTo(c, ms = 1500) { normYaw(); return Promise.all([tween(S, 'yaw', c.yaw, ms), tween(S, 'pitch', c.pitch, ms)]); }
+$('camOblique').addEventListener('click', () => { stopBuild(false); camTo(CAM.oblique); });
+$('camFront').addEventListener('click', () => { stopBuild(false); camTo(CAM.front); });
+
+/* ---- step-by-step build (the "3b1b moment") ---- */
+let buildId = 0, building = false;
+function caption(html) {
+  if (!html) { cap.classList.remove('on'); return; }
+  cap.innerHTML = html; cap.classList.add('on');
+}
+function setVis(k, on, ms) { boxes[k].checked = on; return tween(S.vis, k, on ? 1 : 0, ms); }
+function stopBuild(restore = true) {
+  if (!building) return;
+  building = false; buildId++;
+  caption(''); buildBtn.textContent = 'Build the wave step by step';
+  if (restore) for (const k in boxes) setVis(k, true, 400);
+}
+async function build() {
+  const id = ++buildId, alive = () => id === buildId;
+  building = true; buildBtn.textContent = 'Stop the walkthrough';
+  S.playing = true; updatePlay();
+  camTo(CAM.oblique, 900);
+  await Promise.all(Object.keys(boxes).map(k => setVis(k, false, 450)));
+  if (!alive()) return;
+  const D = describe(S.g, S.p), pd = Math.round(S.p / DEG);
+  const shift = pd === 0 ? 'with no shift (φ = 0)' : `shifted by <span class="cp">φ = ${sgn(String(pd))}°</span>`;
+  const steps = [
+    [`<span class="cx">Step 1 · the x-component.</span> ${Ex} = cos <i class="cg">γ</i> cos(<i>ωt</i> − <i>kz</i>) oscillates in the <i>xz</i>-plane with amplitude ${Math.cos(S.g).toFixed(2)}.`, 'ex', 2800],
+    [`<span class="cy">Step 2 · the y-component,</span> in the <i>yz</i>-plane: amplitude sin <i class="cg">γ</i> = ${Math.sin(S.g).toFixed(2)}, ${shift}.`, 'ey', 3000],
+    [`<span class="ce">Step 3 · add them at every z.</span> The yellow arrows are <b>E</b> = ${Ex}<b>1</b><sub><i>x</i></sub> + ${Ey}<b>1</b><sub><i>y</i></sub>; their tips form the curve.`, 'e', 3000],
+  ];
+  for (const [html, k, ms] of steps) {
+    caption(html);
+    await setVis(k, true, 900); await wait(ms);
+    if (!alive()) return;
+  }
+  const name = D.kind === 'linear' ? 'a line: linear polarisation' : `${D.kind === 'circular' ? 'a circle' : 'an ellipse'}, turning ${D.hand === 'right' ? 'counterclockwise: right-handed' : 'clockwise: left-handed'}`;
+  caption(`<span class="ce">Step 4 · look down the z-axis.</span> With the wave coming at you, the tip traces ${name}.`);
+  setVis('trace', true, 900);
+  await camTo(CAM.front, 2000); await wait(3600);
+  if (!alive()) return;
+  caption('');
+  await camTo(CAM.oblique, 1800);
+  if (!alive()) return;
+  building = false; buildBtn.textContent = 'Build the wave step by step';
+}
+buildBtn.addEventListener('click', () => building ? stopBuild(true) : build());
+
+/* ---- readout ---- */
+let lastKey = '';
+function updateReadout() {
+  const key = S.g.toFixed(5) + '|' + S.p.toFixed(5);
+  if (key === lastKey) return;
+  lastKey = key; VM.dirty = true;
+  const g = S.g, p = S.p, gd = g / DEG, pd = p / DEG, D = describe(g, p);
+
+  if (document.activeElement !== gammaEl) gammaEl.value = gd.toFixed(1);
+  if (document.activeElement !== phiEl) phiEl.value = Math.round(pd);
+  const gp = nicePi(g), pp = nicePi(p);
+  $('gammaOut').textContent = gd.toFixed(1) + '°' + (gp ? ' = ' + gp : '');
+  $('phiOut').textContent = sgn(pd.toFixed(0)) + '°' + (pp ? ' = ' + pp : '');
+  document.querySelectorAll('.preset').forEach(b =>
+    b.setAttribute('aria-pressed', Math.abs(+b.dataset.g - gd) < 0.01 && Math.abs(+b.dataset.p - pd) < 0.01 ? 'true' : 'false'));
+
+  const turn = D.hand === 'right' ? 'counterclockwise' : 'clockwise';
+  let title, sub;
+  if (D.kind === 'linear') {
+    title = 'Linear';
+    const at = gd < 0.25 ? 'along the x-axis' : gd > 89.75 ? 'along the y-axis' : `at ${sgn((D.tau / DEG).toFixed(1))}° from the x-axis`;
+    sub = `The field vector swings back and forth on one line ${at}.`;
+  } else {
+    const H = D.hand === 'right' ? 'Right-hand' : 'Left-hand';
+    title = `${H} ${D.kind}`;
+    sub = D.kind === 'circular'
+      ? `|E| stays constant. Facing the wave, the tip turns ${turn}.`
+      : `The tip runs around an ellipse tilted ${sgn((D.tau / DEG).toFixed(1))}° from the x-axis, turning ${turn} as you face the wave.`;
+  }
+  const st = $('state'); st.textContent = title; st.style.color = handCol(D.hand);
+  $('stateSub').textContent = sub;
+
+  $('ampx').textContent = f3(Math.cos(g));
+  $('ampy').textContent = f3(Math.sin(g));
+  $('tilt').textContent = D.kind === 'circular' ? 'none (circle)' : sgn((D.tau / DEG).toFixed(1)) + '°';
+  $('ar').textContent = D.ar === Infinity ? '∞ (a line)' : `${D.ar.toFixed(2)}  (${(20 * Math.log10(D.ar)).toFixed(1)} dB)`;
+
+  const pr = Math.round(pd);
+  const shiftTxt = pr === 0 ? '' : ` <span class="cp">${pr < 0 ? '−' : '+'} ${Math.abs(pr)}°</span>`;
+  const ph = pr === 0 ? '' : `e<sup><i>j</i>(<span class="cp">${sgn(String(pr))}°</span>)</sup> `;
+  $('eqs').innerHTML =
+    `<b>E</b>(0) = <span class="cx">${f3(Math.cos(g))}</span> <b>1</b><sub><i>x</i></sub> + <span class="cy">${f3(Math.sin(g))}</span> ${ph}<b>1</b><sub><i>y</i></sub><br>` +
+    `${Ex}(<i>z</i>,<i>t</i>) = <span class="cx">${f3(Math.cos(g))}</span> cos(<i>ωt</i> − <i>kz</i>)<br>` +
+    `${Ey}(<i>z</i>,<i>t</i>) = <span class="cy">${f3(Math.sin(g))}</span> cos(<i>ωt</i> − <i>kz</i>${shiftTxt})`;
+
+  let wg;
+  if (gd < 0.25) wg = `<b class="cg">γ</b> = 0: all of the amplitude is in ${Ex} and ${Ey} is zero. The wave is linear along x whatever φ is.`;
+  else if (gd > 89.75) wg = `<b class="cg">γ</b> = 90°: all of the amplitude is in ${Ey}. The wave is linear along y whatever φ is.`;
+  else wg = `<b class="cg">γ</b> = ${gd.toFixed(1)}°: the amplitudes are cos γ = ${Math.cos(g).toFixed(2)} and sin γ = ${Math.sin(g).toFixed(2)}, so ${Ey}/${Ex} = tan γ = ${Math.tan(g).toFixed(2)}. γ sets the green box the tip stays inside; its diagonal makes angle γ with the x-axis.${Math.abs(gd - 45) < 0.25 ? ' Here the amplitudes are equal and the box is a square.' : ''}`;
+  $('whyGamma').innerHTML = wg;
+
+  const ap = Math.abs(pr);
+  const frac = ap === 90 ? 'a quarter period' : ap === 180 ? 'half a period' : ap === 45 ? 'an eighth of a period' : `${(ap / 360).toFixed(2)} of a period`;
+  let wp;
+  if (ap === 0) wp = `<b class="cp">φ</b> = 0: ${Ex} and ${Ey} peak at the same moment, so the tip slides back and forth along the box diagonal. Linear at angle γ.`;
+  else if (ap === 180) wp = `<b class="cp">φ</b> = ${sgn(String(pr))}°: ${Ey} peaks when ${Ex} is at its most negative, so the tip slides along the other diagonal. Linear at angle −γ.`;
+  else {
+    wp = `<b class="cp">φ</b> = ${sgn(String(pr))}°: ${Ey} reaches its peak ${frac} ${pr < 0 ? 'after' : 'before'} ${Ex}. The two never vanish together, so the tip goes around instead of through the origin.`;
+    if (ap === 90) wp += Math.abs(gd - 45) < 0.25 ? ' A quarter-period shift with equal amplitudes gives a circle.' : ' A quarter-period shift lines the ellipse up with the x and y axes.';
+    wp += ` Because φ ${pr < 0 ? '< 0' : '> 0'}, the tip turns from ${pr < 0 ? '+x toward +y' : '+x toward −y'}: ${pr < 0 ? 'right' : 'left'}-handed. Flip the sign of φ to reverse it.`;
+    if (gd < 0.25 || gd > 89.75) wp += ' (With only one component present you cannot see this here.)';
+  }
+  $('whyPhi').innerHTML = wp;
+}
+
+/* ---- main loop ---- */
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  stepTweens(now);
+  if (S.playing) S.wt = (S.wt + dt * TAU / PERIOD * S.speed) % (TAU * 1000);
+  updateReadout();
+  draw3D(); drawXY();
+  if (VM.dirty) { VM.dirty = false; drawMap(); }
+  requestAnimationFrame(frame);
+}
+updatePlay();
+if (document.fonts) document.fonts.ready.then(() => { VM.dirty = true; });
+requestAnimationFrame(frame);
+})();
+
+</script>
+
+</body></html>

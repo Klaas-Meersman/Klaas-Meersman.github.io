@@ -6,6 +6,7 @@ import { SITE } from "../consts";
 // `url` links the course name to its page in the KU Leuven course catalogue.
 // Use the unprefixed URL — the year-prefixed one (.../2026/syllabi/...) is not
 // public yet and returns an error for visitors without a KU Leuven login.
+// `materials` lists optional extra pages (e.g. interactive demos in public/teaching/).
 const teaching = [
   {
     role: "Teaching assistant",
@@ -20,6 +21,12 @@ const teaching = [
     url: "https://onderwijsaanbod.kuleuven.be/syllabi/v/e/JPI123.htm",
     detail: "KU Leuven, Ghent Technology Campus",
     period: "2026 – present",
+    materials: [
+      {
+        title: "Interactive: polarisation from γ and φ",
+        url: "/teaching/em-waves/polarisation/",
+      },
+    ],
   },
 ];
 ---
@@ -40,6 +47,15 @@ const teaching = [
           <div class="muted small">
             {t.detail} · {t.period}
           </div>
+          {t.materials && (
+            <ul class="materials">
+              {t.materials.map((m) => (
+                <li>
+                  <a href={m.url}>{m.title}</a>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       ))
     }
@@ -63,6 +79,15 @@ const teaching = [
   .teach-list li {
     padding: 0.9rem 0;
     border-bottom: 1px solid var(--border);
+  }
+  .materials {
+    margin: 0.4rem 0 0;
+    padding-left: 1.2rem;
+    font-size: 0.95rem;
+  }
+  .materials li {
+    padding: 0.1rem 0;
+    border-bottom: none;
   }
   .small {
     font-size: 0.85rem;
