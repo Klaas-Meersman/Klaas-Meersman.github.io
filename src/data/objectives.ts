@@ -29,7 +29,7 @@ export const objectives: Objective[] = [
     label: "Compare human response metrics and refine them for adaptive lighting.",
   },
   {
-    title: "From metrics to practical control",
+    title: "Practical control",
     icon: "control",
     label: "Test context-aware control strategies against an optimal benchmark.",
   },
