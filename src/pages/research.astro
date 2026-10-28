@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ObjectiveDiagram from "../components/ObjectiveDiagram.astro";
 import { objectives } from "../data/objectives";
 ---
 
@@ -22,16 +23,19 @@ import { objectives } from "../data/objectives";
   </p>
 
   <h2>Objectives</h2>
-  {
-    objectives.map((o, i) => (
-      <article class="card">
-        <p class="obj-n">Objective {i + 1}</p>
-        <h3>{o.title}</h3>
-        <p class="obj-desc">{o.description}</p>
-      </article>
-    ))
-  }
-
+  <div class="obj-grid">
+    {
+      objectives.map((o, i) => (
+        <article class="card">
+          <div class="obj-fig">
+            <ObjectiveDiagram name={o.diagram} label={o.label} />
+          </div>
+          <p class="obj-n">Objective {i + 1}</p>
+          <h3>{o.title}</h3>
+        </article>
+      ))
+    }
+  </div>
 </BaseLayout>
 
 <style>
@@ -42,10 +46,26 @@ import { objectives } from "../data/objectives";
     text-transform: uppercase;
     color: var(--accent);
   }
-  .card h3 {
-    margin: 0.15rem 0 0.7rem;
+  .obj-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
-  .obj-desc {
+  .obj-grid .card {
     margin: 0;
+  }
+  .obj-fig {
+    background: var(--bg-soft);
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+  .card h3 {
+    margin: 0.15rem 0 0;
+  }
+  @media (max-width: 560px) {
+    .obj-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

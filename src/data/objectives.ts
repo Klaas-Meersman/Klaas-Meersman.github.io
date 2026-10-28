@@ -1,33 +1,36 @@
 // ---------------------------------------------------------------------------
 //  RESEARCH OBJECTIVES
-//  Each objective is a short paragraph: the question I'm trying to answer,
-//  followed by what I actually do about it. Taken from my PhD symposium poster.
+//  Each objective has a title and a small diagram (drawn in
+//  src/components/ObjectiveDiagram.astro). `label` is the task in words; it is
+//  not shown on the page but read out by screen readers in place of the diagram.
+//  Taken from my PhD symposium poster.
 // ---------------------------------------------------------------------------
 
 export interface Objective {
   title: string;
-  description: string;
+  diagram: "twin" | "vr" | "metrics" | "control";
+  label: string;
 }
 
 export const objectives: Objective[] = [
   {
     title: "A digital twin of the room",
-    description:
-      "How can we quantify visual and non-visual stimuli? I build and validate a digital twin for real indoor environments.",
+    diagram: "twin",
+    label: "Build and validate a digital twin for real indoor environments.",
   },
   {
     title: "Making VR physically accurate",
-    description:
-      "How can we make VR physically accurate? I calibrate VR for realistic eye-level exposure.",
+    diagram: "vr",
+    label: "Calibrate VR for realistic eye-level exposure.",
   },
   {
     title: "Metrics for adaptive, non-uniform lighting",
-    description:
-      "How do existing metrics perform in adaptive, non-uniform lighting? I compare human response metrics and refine them for adaptive lighting.",
+    diagram: "metrics",
+    label: "Compare human response metrics and refine them for adaptive lighting.",
   },
   {
     title: "From metrics to practical control",
-    description:
-      "How can we turn metric insights into practical control? I test context-aware control strategies against an optimal benchmark.",
+    diagram: "control",
+    label: "Test context-aware control strategies against an optimal benchmark.",
   },
 ];
