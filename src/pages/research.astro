@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ObjectiveDiagram from "../components/ObjectiveDiagram.astro";
+import ObjectiveIcon from "../components/ObjectiveIcon.astro";
 import { objectives } from "../data/objectives";
 ---
 
@@ -26,12 +26,14 @@ import { objectives } from "../data/objectives";
   <div class="obj-grid">
     {
       objectives.map((o, i) => (
-        <article class="card">
-          <div class="obj-fig">
-            <ObjectiveDiagram name={o.diagram} label={o.label} />
+        <article class="card obj">
+          <div class="obj-icon">
+            <ObjectiveIcon name={o.icon} label={o.label} />
           </div>
-          <p class="obj-n">Objective {i + 1}</p>
-          <h3>{o.title}</h3>
+          <div>
+            <p class="obj-n">Objective {i + 1}</p>
+            <h3>{o.title}</h3>
+          </div>
         </article>
       ))
     }
@@ -54,11 +56,18 @@ import { objectives } from "../data/objectives";
   .obj-grid .card {
     margin: 0;
   }
-  .obj-fig {
+  .obj {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .obj-icon {
+    flex: none;
+    width: 3.6rem;
+    height: 3.6rem;
+    padding: 0.3rem;
     background: var(--bg-soft);
-    border-radius: 8px;
-    padding: 0.5rem;
-    margin-bottom: 0.8rem;
+    border-radius: 10px;
   }
   .card h3 {
     margin: 0.15rem 0 0;
