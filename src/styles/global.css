@@ -1,35 +1,48 @@
 /* ---------------------------------------------------------------------------
    GLOBAL STYLES
-   A small, readable stylesheet. It uses CSS custom properties (the --variables
-   below) so you can restyle the whole site by changing a few colours.
-   The site adapts automatically to light / dark mode.
+   Clean, mostly monochrome look: white space, slate text, soft grey "chip"
+   buttons and tinted panels. The only real colour is in the icons.
+   Everything is driven by the custom properties (--variables) below, and the
+   site adapts automatically to light / dark mode.
 --------------------------------------------------------------------------- */
 
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
 
-  /* Light theme (default) — airy, daylight-blue accent */
-  --bg: #fcfdff;
-  --bg-soft: #f2f6fc;
-  --text: #232b36; /* soft charcoal, not pure black */
-  --text-soft: #667080;
-  --border: #e5eaf2;
-  --accent: #2563eb; /* daylight blue */
-  --accent-soft: #e9effd;
-  --max-width: 46rem;
+  /* Light theme (default) */
+  --bg: #ffffff;
+  --bg-soft: #f1f3f5; /* grey chips and buttons */
+  --bg-soft-hover: #e4e7eb;
+  --panel: #edf1ef; /* tinted side cards */
+  --text: #1f2937; /* slate */
+  --text-soft: #6b7280;
+  --border: #e5e7eb; /* light dividers */
+  --rule: #a5abb3; /* stronger line under the header and section labels */
+  --accent: #2b6cde; /* sky blue, used in icons */
+  --accent-soft: #e8effc;
+  --footer-bg: #1f2a3c;
+
+  --max-width: 72rem; /* header, footer and the home page */
+  --measure: 46rem; /* comfortable reading width for the other pages */
+  --radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #131822;
-    --bg-soft: #1b2231;
-    --text: #e8ecf3;
-    --text-soft: #9aa4b5;
-    --border: #2a3242;
+    --bg: #121418;
+    --bg-soft: #22262d;
+    --bg-soft-hover: #2c3139;
+    --panel: #1a1f1e;
+    --text: #e5e7eb;
+    --text-soft: #9ca3af;
+    --border: #2a2e35;
+    --rule: #444a53;
     --accent: #7aa7ff;
     --accent-soft: #1d2740;
+    --footer-bg: #0b0d10;
   }
 }
 
@@ -43,22 +56,30 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Column layout so the footer sits at the bottom on short pages. */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 1.05rem;
-  line-height: 1.72;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
 }
 
 .wrap {
   width: 100%;
   max-width: var(--max-width);
   margin-inline: auto;
-  padding-inline: 1.25rem;
+  padding-inline: 1.5rem;
 }
 
 /* Headings ---------------------------------------------------------------- */
@@ -66,22 +87,28 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-serif);
   line-height: 1.25;
   color: var(--text);
-  font-weight: 500; /* lighter than bold — keeps the page feeling airy */
-  letter-spacing: -0.01em;
 }
+/* Big and light, like a page title. */
 h1 {
-  font-size: 2rem;
-  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 1.4rem + 2vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.75rem;
 }
+/* Section headings with a rule underneath. */
 h2 {
   font-size: 1.4rem;
-  margin: 3rem 0 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 h3 {
   font-size: 1.15rem;
+  font-weight: 600;
   margin: 1.75rem 0 0.5rem;
 }
 
@@ -89,13 +116,20 @@ p {
   margin: 0 0 1rem;
 }
 
+/* Links are text-coloured and underlined, not blue. */
 a {
-  color: var(--accent);
-  text-decoration: none;
-  text-underline-offset: 2px;
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 3px;
+  transition:
+    text-decoration-color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 a:hover {
-  text-decoration: underline;
+  text-decoration-color: currentColor;
 }
 
 hr {
@@ -105,8 +139,7 @@ hr {
 }
 
 code {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--bg-soft);
   padding: 0.15em 0.4em;
@@ -114,8 +147,7 @@ code {
 }
 pre {
   background: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 1rem;
   overflow-x: auto;
 }
@@ -127,11 +159,11 @@ pre code {
 blockquote {
   margin: 1.25rem 0;
   padding: 0.25rem 0 0.25rem 1.1rem;
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--rule);
   color: var(--text-soft);
 }
 
-/* Tables (used in the reading notes) ------------------------------------- */
+/* Tables ------------------------------------------------------------------ */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -151,7 +183,12 @@ th {
 
 /* Layout helpers ---------------------------------------------------------- */
 main {
+  flex: 1;
   padding-block: 2.5rem 4rem;
+}
+/* Pages read at a comfortable width, left-aligned under the header. */
+.content {
+  max-width: var(--measure);
 }
 
 .lead {
@@ -163,36 +200,79 @@ main {
   color: var(--text-soft);
 }
 
+/* Grey chip (interests, skills, publication type). */
 .tag {
   display: inline-block;
-  font-size: 0.8rem;
-  background: var(--accent-soft);
-  color: var(--accent);
-  padding: 0.1rem 0.55rem;
-  border-radius: 999px;
-  margin-right: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
 }
 
 .pill-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.45rem;
   list-style: none;
   padding: 0;
   margin: 0.5rem 0 0;
 }
 
-/* Cards / lists ----------------------------------------------------------- */
+/* Buttons ----------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font: 600 0.95rem/1.3 var(--font-sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--bg-soft-hover);
+}
+.btn svg {
+  flex: none;
+}
+/* Outlined, for secondary links such as "DOI" or "Poster (PDF)". */
+.btn-outline {
+  background: var(--bg);
+  border-color: var(--rule);
+}
+.btn-outline:hover {
+  background: var(--bg-soft);
+}
+.btn-sm {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+}
+/* Square icon-only button. Give it an aria-label. */
+.btn-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: var(--radius);
+}
+
+/* Cards / panels ---------------------------------------------------------- */
 .card {
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   padding: 1.25rem 1.4rem;
   margin-bottom: 1rem;
-  background: var(--bg);
+  background: var(--panel);
   transition: border-color 0.15s ease;
 }
 .card:hover {
-  border-color: var(--accent);
+  border-color: var(--rule);
 }
 .card h3 {
   margin-top: 0;
@@ -203,7 +283,7 @@ main {
 
 .iframe-wrap {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   overflow: hidden;
   margin: 1.5rem 0;
 }
@@ -218,7 +298,7 @@ main {
   body {
     font-size: 1rem;
   }
-  h1 {
-    font-size: 1.7rem;
+  .wrap {
+    padding-inline: 1.1rem;
   }
 }

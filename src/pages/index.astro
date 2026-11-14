@@ -35,7 +35,7 @@ const ICONS: Record<string, string> = {
     '<path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>',
 };
 
-// Icon links shown under the photo. Entries with an empty href are hidden.
+// Icon buttons next to the photo. Entries with an empty href are hidden.
 const social = [
   { key: "email", label: "Email", href: LINKS.email },
   { key: "kuleuven", label: "KU Leuven", href: LINKS.kuleuven },
@@ -46,50 +46,27 @@ const social = [
 ---
 
 <BaseLayout>
-  <section class="intro">
-    <div class="intro-text">
+  <section class="hero">
+    <!-- Swap the photo by replacing public/profile.jpg. -->
+    <img
+      class="avatar"
+      src="/profile.jpg"
+      alt="Portrait of Klaas Meersman"
+      width="400"
+      height="400"
+      loading="eager"
+    />
+    <div class="hero-main">
       <h1>{SITE.name}</h1>
       <p class="lead">
         {SITE.role}, {SITE.affiliation}.
       </p>
-      <p>
-        I'm a PhD researcher at the
-        <a href={LAB_URL}>Light &amp; Lighting Laboratory</a>, KU Leuven. I work
-        on lighting that can change its shape, more formally called spatially adaptive 
-        lighting. Instead of a fixed radiation pattern, these
-        luminaires can radiate light exactly where it's needed and keep adjusting as
-        the daylight shifts through the day and people move around the room. More specifically, my goal is to 
-        build a digital twin of the hardware, to then design control algorithms that 
-        balance visual comfort, non-visual effects (like your body clock), and energy use.
-      </p>
-      <p>
-        Somewhere down the line, I'd like to use VR to make things more accessible for people with impairments.
-      </p>
-      <p>
-        If any of this sounds interesting and you would like to collab, feel free to reach out:
-        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
-      </p>
-
-      <ul class="pill-row">
-        {interests.map((i) => <li class="tag">{i}</li>)}
-      </ul>
-    </div>
-
-    <aside class="intro-photo">
-      <!-- Swap the photo by replacing public/profile.jpg. -->
-      <img
-        class="avatar"
-        src="/profile.jpg"
-        alt="Portrait of Klaas Meersman"
-        width="400"
-        height="400"
-        loading="eager"
-      />
-      <ul class="social-icons">
+      <ul class="hero-actions">
         {
           social.map((l) => (
             <li>
               <a
+                class="btn btn-icon"
                 href={l.href}
                 aria-label={l.label}
                 title={l.label}
@@ -103,8 +80,30 @@ const social = [
           ))
         }
       </ul>
-    </aside>
+    </div>
   </section>
+
+  <p>
+    I'm a PhD researcher at the
+    <a href={LAB_URL}>Light &amp; Lighting Laboratory</a>, KU Leuven. I work
+    on lighting that can change its shape, more formally called spatially adaptive 
+    lighting. Instead of a fixed radiation pattern, these
+    luminaires can radiate light exactly where it's needed and keep adjusting as
+    the daylight shifts through the day and people move around the room. More specifically, my goal is to 
+    build a digital twin of the hardware, to then design control algorithms that 
+    balance visual comfort, non-visual effects (like your body clock), and energy use.
+  </p>
+  <p>
+    Somewhere down the line, I'd like to use VR to make things more accessible for people with impairments.
+  </p>
+  <p>
+    If any of this sounds interesting and you would like to collab, feel free to reach out:
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+  </p>
+
+  <ul class="pill-row">
+    {interests.map((i) => <li class="tag">{i}</li>)}
+  </ul>
 
   <h2>Currently</h2>
   <p>
@@ -115,25 +114,23 @@ const social = [
   </p>
 
   <h2>Timeline</h2>
-  <div class="timeline-v">
+  <div class="timeline">
     {
       byYear.map((group) => (
         <section class="tl-group">
           <h3 class="tl-year">{group.year}</h3>
-          <ol>
+          <ol class="tl-items">
             {group.items.map((m) => (
-              <li>
-                <span class="tl-date muted">{m.display}</span>
-                <div class="tl-body">
-                  <strong class="tl-title">
-                    {m.url ? (
-                      <a href={m.url} set:html={m.title} />
-                    ) : (
-                      <Fragment set:html={m.title} />
-                    )}
-                  </strong>
-                  {m.detail && <p class="muted tl-detail" set:html={m.detail} />}
-                </div>
+              <li class="tl-item">
+                <span class="tl-date">{m.display}</span>
+                <strong class="tl-title">
+                  {m.url ? (
+                    <a href={m.url} set:html={m.title} />
+                  ) : (
+                    <Fragment set:html={m.title} />
+                  )}
+                </strong>
+                {m.detail && <p class="muted tl-detail" set:html={m.detail} />}
               </li>
             ))}
           </ol>
@@ -141,139 +138,122 @@ const social = [
       ))
     }
   </div>
-
 </BaseLayout>
 
 <style>
-  .intro {
+  /* Page header: rounded-square photo, big light name, icon buttons. */
+  .hero {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.25rem 2rem;
     align-items: start;
-  }
-  @media (min-width: 640px) {
-    .intro {
-      grid-template-columns: 1fr auto;
-    }
-  }
-  .intro-photo {
-    text-align: center;
-    max-width: 12rem;
+    margin-bottom: 2.25rem;
   }
   .avatar {
-    width: 9rem;
-    height: 9rem;
-    border-radius: 50%;
-    margin: 0 auto;
     display: block;
-    /* Crop to a circle without squashing the photo. */
+    width: 9.5rem;
+    height: 9.5rem;
+    border-radius: 16px;
+    /* Crop to a square without squashing the photo. */
     object-fit: cover;
-    background: var(--accent-soft);
-    border: 1px solid var(--border);
+    background: var(--bg-soft);
   }
-  /* Vertical timeline: one continuous line, a year heading per group
-     (large hollow ring) and a small filled dot per milestone. */
-  .timeline-v {
-    margin: 0;
-    padding: 0;
+  .hero-main h1 {
+    margin: 0.4rem 0 0.35rem;
   }
-  .tl-group ol {
+  .hero-main .lead {
+    margin: 0 0 1.1rem;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
   }
+  @media (max-width: 560px) {
+    .hero {
+      gap: 1rem 1.1rem;
+    }
+    .avatar {
+      width: 5.5rem;
+      height: 5.5rem;
+      border-radius: 12px;
+    }
+    .hero-main h1 {
+      margin-top: 0;
+    }
+  }
 
-  /* Year heading sits on the line with a hollow ring. */
-  .tl-year {
-    position: relative;
+  /* Timeline: the year in large light numerals on the left (it stays in view
+     while you scroll through that year), milestones as rows on the right
+     separated by thin lines, each with its date in a grey chip. */
+  .timeline {
     margin: 0;
-    padding: 0 0 0.9rem 1.6rem;
-    border-left: 2px solid var(--border);
-    font-family: var(--font-serif);
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--text);
   }
-  .tl-year::before {
-    content: "";
-    position: absolute;
-    left: -0.53rem;
-    top: 0.35rem;
-    width: 0.9rem;
-    height: 0.9rem;
-    border-radius: 50%;
-    background: var(--bg);
-    border: 2px solid var(--accent);
+  .tl-group {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0 1.5rem;
   }
-  /* Breathing room between year groups. */
-  .tl-group + .tl-group .tl-year {
-    padding-top: 1.4rem;
+  .tl-group + .tl-group {
+    margin-top: 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
   }
-
-  .tl-group li {
-    position: relative;
-    padding: 0 0 1.4rem 1.6rem;
-    border-left: 2px solid var(--border);
+  .tl-year {
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-soft);
   }
-  .tl-group li::before {
-    content: "";
-    position: absolute;
-    left: -0.32rem;
-    top: 0.45rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--accent);
+  .tl-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
-  /* End the line after the very last milestone. */
-  .tl-group:last-child li:last-child {
-    border-left-color: transparent;
-    padding-bottom: 0;
+  .tl-item + .tl-item {
+    margin-top: 1.1rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--border);
   }
-
   .tl-date {
-    display: block;
-    font-size: 0.82rem;
-    letter-spacing: 0.02em;
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 5px;
+    background: var(--bg-soft);
+    color: var(--text-soft);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
     text-transform: uppercase;
   }
   .tl-title {
-    font-family: var(--font-serif);
+    display: block;
     font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.45;
   }
   .tl-detail {
-    margin: 0.2rem 0 0;
+    margin: 0.3rem 0 0;
     font-size: 0.95rem;
   }
-
-  /* Icon links under the photo. Labels live in aria-label/title, so they stay
-     accessible to screen readers and show on hover. */
-  .social-icons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.85rem;
-    list-style: none;
-    margin: 1rem 0 0;
-    padding: 0;
-  }
-  .social-icons a {
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    color: var(--text-soft);
-    transition:
-      color 0.15s ease,
-      background 0.15s ease;
-  }
-  .social-icons a:hover {
-    color: var(--accent);
-    background: var(--accent-soft);
-    text-decoration: none;
-  }
-  .social-icons svg {
-    display: block;
+  @media (max-width: 560px) {
+    .tl-group {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .tl-year {
+      position: static;
+      margin-bottom: 0.9rem;
+      font-size: 1.8rem;
+    }
   }
 </style>

@@ -39,22 +39,22 @@ const years = Object.keys(byYear)
             {pub.note && <p class="muted pub-note">{pub.note}</p>}
             <p class="pub-links">
               {pub.doi && (
-                <a class="pub-chip" href={`https://doi.org/${pub.doi}`}>
+                <a class="btn btn-outline btn-sm" href={`https://doi.org/${pub.doi}`}>
                   DOI
                 </a>
               )}
               {pub.pdf && (
-                <a class="pub-chip" href={pub.pdf}>
+                <a class="btn btn-outline btn-sm" href={pub.pdf}>
                   {pub.type === "poster" ? "Poster (PDF)" : "Paper (PDF)"}
                 </a>
               )}
               {pub.code && (
-                <a class="pub-chip" href={pub.code}>
+                <a class="btn btn-outline btn-sm" href={pub.code}>
                   Code
                 </a>
               )}
               {pub.url && (
-                <a class="pub-chip" href={pub.url}>
+                <a class="btn btn-outline btn-sm" href={pub.url}>
                   Event page
                 </a>
               )}
@@ -79,6 +79,7 @@ const years = Object.keys(byYear)
   }
   .pub-title {
     font-weight: 600;
+    font-size: 1.08rem;
     margin: 0 0 0.2rem;
   }
   .pub-meta {
@@ -88,7 +89,10 @@ const years = Object.keys(byYear)
   }
   .pub-type {
     margin-left: 0.4rem;
+    padding: 0.1rem 0.55rem;
+    font-size: 0.8rem;
     text-transform: capitalize;
+    vertical-align: 0.05em;
   }
   .pub-note {
     margin: 0 0 0.35rem;
@@ -100,18 +104,5 @@ const years = Object.keys(byYear)
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
-  }
-  .pub-chip {
-    display: inline-block;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.15rem 0.6rem;
-    font-size: 0.85rem;
-    color: var(--accent);
-  }
-  .pub-chip:hover {
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    text-decoration: none;
   }
 </style>

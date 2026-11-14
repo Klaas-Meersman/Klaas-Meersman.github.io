@@ -51,7 +51,12 @@ const teaching = [
             <ul class="materials">
               {t.materials.map((m) => (
                 <li>
-                  <a href={m.url}>{m.title}</a>
+                  <a class="btn btn-outline btn-sm" href={m.url}>
+                    <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                      <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M8 5.5v13l10-6.5z"></path>
+                    </svg>
+                    {m.title}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -80,12 +85,15 @@ const teaching = [
     border-bottom: 1px solid var(--border);
   }
   .materials {
-    margin: 0.4rem 0 0;
-    padding-left: 1.2rem;
-    font-size: 0.95rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    list-style: none;
+    margin: 0.65rem 0 0;
+    padding: 0;
   }
   .materials li {
-    padding: 0.1rem 0;
+    padding: 0;
     border-bottom: none;
   }
   .small {
