@@ -21,7 +21,7 @@
     monospace;
 
   /* Light theme (default) */
-  --bg: #fafcfe; /* p 0.02, Y 0.97: nearly white */
+  --bg: #f7fafe; /* p 0.04, Y 0.954: nearly white */
   --bg-soft: #c2ddf9; /* p 0.30, Y 0.70: chips and buttons */
   --bg-soft-hover: #aecff1; /* p 0.38, Y 0.60 */
   --panel: #d3e7fc; /* p 0.22, Y 0.78: profile card and other cards */
