@@ -2,6 +2,7 @@
 import { SITE } from "../consts";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import ProfileCard from "../components/ProfileCard.astro";
 import "../styles/global.css";
 
 // Every page passes in its own title & description; sensible defaults otherwise.
@@ -38,10 +39,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body>
     <Header />
     <main>
-      <div class="wrap">
+      <!-- Three columns on wide screens: the profile card, the content
+           (always centred) and an empty one. Narrow screens: card above
+           content. -->
+      <div class="wrap page-grid">
         <div class="content">
           <slot />
         </div>
+        <aside class="page-side">
+          <ProfileCard />
+        </aside>
       </div>
     </main>
     <Footer />

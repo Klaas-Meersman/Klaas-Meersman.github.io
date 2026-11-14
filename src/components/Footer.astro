@@ -1,6 +1,5 @@
 ---
 import { SITE, LINKS } from "../consts";
-import Monogram from "./Monogram.astro";
 
 const year = new Date().getFullYear();
 
@@ -16,9 +15,6 @@ const social = [
 
 <footer class="site-footer">
   <div class="wrap footer-top">
-    <a href="/" class="footer-brand" aria-label={`${SITE.name}, home`}>
-      <Monogram size={44} />
-    </a>
     <ul class="footer-links">
       {
         social.map((l) => (
@@ -43,14 +39,13 @@ const social = [
 </footer>
 
 <style>
-  /* Dark band, always, in both themes. */
+  /* Dark band, always, in both themes. Text colours are 490 nm tints too
+     (see global.css). */
   .site-footer {
-    --mark-ink: #f3f4f6;
-    --mark-paper: var(--footer-bg);
     margin-top: 3rem;
     padding-block: 2.5rem 1.5rem;
     background: var(--footer-bg);
-    color: #d6dbe2;
+    color: #ddeaeb; /* p 0.10, Y 0.80 */
   }
   .site-footer a {
     color: inherit;
@@ -59,11 +54,7 @@ const social = [
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
     gap: 1.5rem 2rem;
-  }
-  .footer-brand {
-    display: block;
   }
   .footer-links {
     display: flex;
@@ -90,6 +81,6 @@ const social = [
     padding-top: 1.1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.12);
     font-size: 0.85rem;
-    color: #9aa3b2;
+    color: #91afb2; /* p 0.30, Y 0.40 */
   }
 </style>

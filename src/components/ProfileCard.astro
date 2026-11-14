@@ -1,0 +1,176 @@
+---
+import { SITE, LINKS, LAB_URL } from "../consts";
+
+// Profile shown next to the content on every page (see BaseLayout.astro).
+
+// Inline SVG icons (24x24). Kept here so the page needs no external requests.
+const ICONS: Record<string, string> = {
+  location:
+    '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.7"/>',
+  lab:
+    '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M3 9.5 12 4l9 5.5M5 10v8m4.7-8v8m4.6-8v8M19 10v8M3 20.5h18"/>',
+  email:
+    '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M3 5.5h18a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="m2.6 6.4 9.4 6.6 9.4-6.6"/>',
+  kuleuven:
+    '<path fill="currentColor" d="M12 3 1 9l4 2.18V17c0 .37.2.71.53.88L12 21l6.47-3.12A1 1 0 0 0 19 17v-5.82L21 10.1V16h2V9L12 3zm0 2.28L18.9 9 12 12.72 5.1 9 12 5.28zM17 12.27V16.4l-5 2.41-5-2.41v-4.13l4.53 2.47a1 1 0 0 0 .94 0L17 12.27z"/>',
+  orcid:
+    '<path fill="currentColor" d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378a.947.947 0 1 1 0 1.894.947.947 0 0 1 0-1.894zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/>',
+  github:
+    '<path fill="currentColor" d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.29 0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/>',
+  linkedin:
+    '<path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>',
+};
+
+// Profile links. Entries with an empty href (see consts.ts) are hidden.
+const social = [
+  { key: "email", label: "Email", href: LINKS.email },
+  { key: "kuleuven", label: "KU Leuven", href: LINKS.kuleuven },
+  { key: "orcid", label: "ORCID", href: LINKS.orcid },
+  { key: "github", label: "GitHub", href: LINKS.github },
+  { key: "linkedin", label: "LinkedIn", href: LINKS.linkedin },
+].filter((l) => l.href);
+---
+
+<section class="profile" aria-label="Profile">
+  <!-- Swap the photo by replacing public/profile.jpg. -->
+  <img
+    class="profile-photo"
+    src="/profile.jpg"
+    alt="Portrait of Klaas Meersman"
+    width="400"
+    height="400"
+    loading="eager"
+  />
+  <div class="profile-id">
+    <p class="profile-name">{SITE.name}</p>
+    <p class="profile-role">{SITE.role}</p>
+  </div>
+  <ul class="profile-meta">
+    <li>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <Fragment set:html={ICONS.location} />
+      </svg>
+      {SITE.location}
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <Fragment set:html={ICONS.lab} />
+      </svg>
+      <a href={LAB_URL}>{SITE.affiliation}</a>
+    </li>
+  </ul>
+  <ul class="profile-links">
+    {
+      social.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            rel={l.href.startsWith("mailto:") ? undefined : "me noopener"}
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <Fragment set:html={ICONS[l.key]} />
+            </svg>
+            {l.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  /* Tinted card. Wide screens: a column next to the content (sticky, see
+     BaseLayout). Narrow screens: a compact block above the content. */
+  .profile {
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 1.3rem 1.3rem 1.1rem;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .profile-photo {
+    display: block;
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 14px;
+    /* Crop to a square without squashing the photo. */
+    object-fit: cover;
+    background: var(--bg-soft);
+  }
+  .profile-id {
+    margin: 0.9rem 0 0.8rem;
+  }
+  .profile-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .profile-role {
+    margin: 0.1rem 0 0;
+    color: var(--text-soft);
+  }
+  .profile-meta,
+  .profile-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .profile-meta li,
+  .profile-links a {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-block: 0.22rem;
+  }
+  .profile-meta svg,
+  .profile-links svg {
+    flex: none;
+    margin-top: 0.12rem;
+    color: var(--accent);
+  }
+  .profile-links {
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+  }
+  .profile-links a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .profile-links a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 69.99rem) {
+    .profile {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-areas:
+        "photo id"
+        "photo meta"
+        "links links";
+      column-gap: 1rem;
+      align-items: start;
+    }
+    .profile-photo {
+      grid-area: photo;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 12px;
+    }
+    .profile-id {
+      grid-area: id;
+      margin: 0 0 0.35rem;
+    }
+    .profile-meta {
+      grid-area: meta;
+    }
+    .profile-links {
+      grid-area: links;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.1rem 1.1rem;
+    }
+  }
+</style>

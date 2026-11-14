@@ -1,9 +1,15 @@
 /* ---------------------------------------------------------------------------
    GLOBAL STYLES
-   Clean, mostly monochrome look: white space, slate text, soft grey "chip"
-   buttons and tinted panels. The only real colour is in the icons.
+   Clean look: white space, soft "chip" buttons and tinted panels.
    Everything is driven by the custom properties (--variables) below, and the
    site adapts automatically to light / dark mode.
+
+   COLOUR: every colour is the same hue, 490 nm, where the melanopic
+   sensitivity function (CIE S 026) peaks. Each one lies on the CIE 1931 xy
+   line from the D65 white point to the 490 nm spectral colour, so all share
+   a dominant wavelength of 490 nm; only saturation and lightness differ.
+   p = purity (0 = neutral grey, 1 = most saturated colour sRGB can show,
+   #00f6ff), Y = relative luminance.
 --------------------------------------------------------------------------- */
 
 :root {
@@ -12,37 +18,43 @@
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     monospace;
 
-  /* Light theme (default) */
-  --bg: #ffffff;
-  --bg-soft: #f1f3f5; /* grey chips and buttons */
-  --bg-soft-hover: #e4e7eb;
-  --panel: #edf1ef; /* tinted side cards */
-  --text: #1f2937; /* slate */
-  --text-soft: #6b7280;
-  --border: #e5e7eb; /* light dividers */
-  --rule: #a5abb3; /* stronger line under the header and section labels */
-  --accent: #2b6cde; /* sky blue, used in icons */
-  --accent-soft: #e8effc;
-  --footer-bg: #1f2a3c;
+  /* Light theme (default). The page background is a lighter, less saturated
+     version of the profile card colour (--panel). */
+  --bg: #ebf6f7; /* p 0.08, Y 0.90 */
+  --bg-soft: #bbe1e4; /* p 0.30, Y 0.70: chips and buttons */
+  --bg-soft-hover: #a5d4d7; /* p 0.38, Y 0.60 */
+  --panel: #cdeaec; /* p 0.22, Y 0.78: profile card and other cards */
+  --text: #122728; /* p 0.65, Y 0.017 */
+  --text-soft: #3f6366; /* p 0.55, Y 0.11 */
+  --border: #c8e1e4; /* p 0.20, Y 0.72: light dividers */
+  --rule: #77abae; /* p 0.50, Y 0.36: line under the header and headings */
+  --accent: #00989e; /* p 1, Y 0.25: full-strength 490 nm accents */
+  --accent-soft: #b6dfe2; /* p 0.32, Y 0.68 */
+  --footer-bg: #003b3e; /* p 1, Y 0.035 */
 
-  --max-width: 72rem; /* header, footer and the home page */
-  --measure: 46rem; /* comfortable reading width for the other pages */
+  --measure: 46rem; /* reading width of the main text */
+  --side: 15rem; /* width of the profile column */
+  --gutter: 3rem; /* gap between the columns */
+  /* Equal outer columns keep the main text centred. */
+  --columns: minmax(var(--side), 1fr) minmax(0, var(--measure))
+    minmax(var(--side), 1fr);
+  --max-width: calc(var(--measure) + 2 * (var(--side) + var(--gutter)) + 3rem);
   --radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121418;
-    --bg-soft: #22262d;
-    --bg-soft-hover: #2c3139;
-    --panel: #1a1f1e;
-    --text: #e5e7eb;
-    --text-soft: #9ca3af;
-    --border: #2a2e35;
-    --rule: #444a53;
-    --accent: #7aa7ff;
-    --accent-soft: #1d2740;
-    --footer-bg: #0b0d10;
+    --bg: #0e1818; /* p 0.45, Y 0.008 */
+    --bg-soft: #1f3839; /* p 0.60, Y 0.034 */
+    --bg-soft-hover: #274446; /* p 0.60, Y 0.05 */
+    --panel: #182a2b; /* p 0.55, Y 0.02 */
+    --text: #e1eced; /* p 0.08, Y 0.82 */
+    --text-soft: #93afb1; /* p 0.28, Y 0.40 */
+    --border: #293c3d; /* p 0.45, Y 0.04 */
+    --rule: #405e60; /* p 0.50, Y 0.10 */
+    --accent: #40ced5; /* p 0.90, Y 0.50 */
+    --accent-soft: #223d3e; /* p 0.60, Y 0.04 */
+    --footer-bg: #030f10; /* p 0.75, Y 0.004 */
   }
 }
 
@@ -116,12 +128,12 @@ p {
   margin: 0 0 1rem;
 }
 
-/* Links are text-coloured and underlined, not blue. */
+/* Links are text-coloured with a 490 nm underline. */
 a {
   color: var(--text);
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent) 70%, transparent);
   text-underline-offset: 3px;
   transition:
     text-decoration-color 0.15s ease,
@@ -129,7 +141,8 @@ a {
     border-color 0.15s ease;
 }
 a:hover {
-  text-decoration-color: currentColor;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
 }
 
 hr {
@@ -186,9 +199,40 @@ main {
   flex: 1;
   padding-block: 2.5rem 4rem;
 }
-/* Pages read at a comfortable width, left-aligned under the header. */
+/* Page grid: content centred, profile card in the left-hand column (and
+   sticky while you scroll). Below 70rem the card moves above the content. */
+.page-grid {
+  display: grid;
+  grid-template-columns: var(--columns);
+  column-gap: var(--gutter);
+  align-items: start;
+}
 .content {
-  max-width: var(--measure);
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+.page-side {
+  grid-column: 1;
+  grid-row: 1;
+  position: sticky;
+  top: 5.5rem;
+}
+@media (max-width: 69.99rem) {
+  .page-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: calc(var(--measure) + 3rem);
+  }
+  .content,
+  .page-side {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .page-side {
+    position: static;
+    order: -1;
+    margin-bottom: 2.25rem;
+  }
 }
 
 .lead {
@@ -253,13 +297,6 @@ main {
 .btn-sm {
   padding: 0.3rem 0.7rem;
   font-size: 0.85rem;
-}
-/* Square icon-only button. Give it an aria-label. */
-.btn-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border-radius: var(--radius);
 }
 
 /* Cards / panels ---------------------------------------------------------- */
