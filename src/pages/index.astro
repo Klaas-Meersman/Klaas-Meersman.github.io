@@ -23,10 +23,9 @@ const interests = [
 ---
 
 <BaseLayout>
-  <h1>{SITE.name}</h1>
-  <p class="lead">
-    {SITE.role}, {SITE.affiliation}.
-  </p>
+  <!-- Name and affiliation are in the profile card; the heading stays for
+       screen readers and search engines. -->
+  <h1 class="sr-only">{SITE.name}</h1>
 
   <p>
     I'm a PhD researcher at the

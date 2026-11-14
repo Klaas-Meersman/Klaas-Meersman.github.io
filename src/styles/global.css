@@ -245,6 +245,19 @@ main {
   color: var(--text-soft);
 }
 
+/* Hidden on screen, still read by screen readers and search engines. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Grey chip (interests, skills, publication type). */
 .tag {
   display: inline-block;

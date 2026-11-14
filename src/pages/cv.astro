@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SITE } from "../consts";
 
 // A lightweight web CV. Edit the arrays below.
 //
@@ -76,9 +75,6 @@ const languages = [
 
 <BaseLayout title="CV" description="Curriculum vitae of Klaas Meersman.">
   <h1>Curriculum Vitae</h1>
-  <p class="muted">
-    {SITE.name} · {SITE.role}, {SITE.affiliation}
-  </p>
 
   <h2>Education</h2>
   <ul class="timeline">
