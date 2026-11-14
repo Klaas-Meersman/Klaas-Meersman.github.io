@@ -4,12 +4,14 @@
    Everything is driven by the custom properties (--variables) below, and the
    site adapts automatically to light / dark mode.
 
-   COLOUR: every colour is the same hue, 490 nm, where the melanopic
-   sensitivity function (CIE S 026) peaks. Each one lies on the CIE 1931 xy
-   line from the D65 white point to the 490 nm spectral colour, so all share
-   a dominant wavelength of 490 nm; only saturation and lightness differ.
-   p = purity (0 = neutral grey, 1 = most saturated colour sRGB can show,
-   #00f6ff), Y = relative luminance.
+   COLOUR: every colour is one hue, 480 nm: the peak sensitivity of
+   melanopsin, the photopigment behind the non-visual effects of light. (The
+   CIE S 026 melanopic function peaks a little higher, at 490 nm, because it
+   includes the filtering of the eye's lens.) Each colour lies on the CIE 1931
+   xy line from the D65 white point to the 480 nm spectral colour, so all
+   share a dominant wavelength of 480 nm; only saturation and lightness
+   differ. p = purity (0 = neutral grey, 1 = most saturated colour sRGB can
+   show, #00b2ff), Y = relative luminance.
 --------------------------------------------------------------------------- */
 
 :root {
@@ -18,19 +20,18 @@
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     monospace;
 
-  /* Light theme (default). The page background is a lighter, less saturated
-     version of the profile card colour (--panel). */
-  --bg: #ebf6f7; /* p 0.08, Y 0.90 */
-  --bg-soft: #bbe1e4; /* p 0.30, Y 0.70: chips and buttons */
-  --bg-soft-hover: #a5d4d7; /* p 0.38, Y 0.60 */
-  --panel: #cdeaec; /* p 0.22, Y 0.78: profile card and other cards */
-  --text: #122728; /* p 0.65, Y 0.017 */
-  --text-soft: #3f6366; /* p 0.55, Y 0.11 */
-  --border: #c8e1e4; /* p 0.20, Y 0.72: light dividers */
-  --rule: #77abae; /* p 0.50, Y 0.36: line under the header and headings */
-  --accent: #00989e; /* p 1, Y 0.25: full-strength 490 nm accents */
-  --accent-soft: #b6dfe2; /* p 0.32, Y 0.68 */
-  --footer-bg: #003b3e; /* p 1, Y 0.035 */
+  /* Light theme (default) */
+  --bg: #fafcfe; /* p 0.02, Y 0.97: nearly white */
+  --bg-soft: #c2ddf9; /* p 0.30, Y 0.70: chips and buttons */
+  --bg-soft-hover: #aecff1; /* p 0.38, Y 0.60 */
+  --panel: #d3e7fc; /* p 0.22, Y 0.78: profile card and other cards */
+  --text: #152532; /* p 0.65, Y 0.017 */
+  --text-soft: #456078; /* p 0.55, Y 0.11 */
+  --border: #cedff2; /* p 0.20, Y 0.72: light dividers */
+  --rule: #7fa6ca; /* p 0.50, Y 0.36: line under the header and headings */
+  --accent: #0099dc; /* p 1, Y 0.28: strong accents */
+  --accent-soft: #bedaf8; /* p 0.32, Y 0.68 */
+  --footer-bg: #003854; /* p 1, Y 0.035 */
 
   --measure: 46rem; /* reading width of the main text */
   --side: 15rem; /* width of the profile column */
@@ -44,17 +45,17 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0e1818; /* p 0.45, Y 0.008 */
-    --bg-soft: #1f3839; /* p 0.60, Y 0.034 */
-    --bg-soft-hover: #274446; /* p 0.60, Y 0.05 */
-    --panel: #182a2b; /* p 0.55, Y 0.02 */
-    --text: #e1eced; /* p 0.08, Y 0.82 */
-    --text-soft: #93afb1; /* p 0.28, Y 0.40 */
-    --border: #293c3d; /* p 0.45, Y 0.04 */
-    --rule: #405e60; /* p 0.50, Y 0.10 */
-    --accent: #40ced5; /* p 0.90, Y 0.50 */
-    --accent-soft: #223d3e; /* p 0.60, Y 0.04 */
-    --footer-bg: #030f10; /* p 0.75, Y 0.004 */
+    --bg: #10171d; /* p 0.45, Y 0.008 */
+    --bg-soft: #233646; /* p 0.60, Y 0.034 */
+    --bg-soft-hover: #2b4154; /* p 0.60, Y 0.05 */
+    --panel: #1b2834; /* p 0.55, Y 0.02 */
+    --text: #e4eaf2; /* p 0.08, Y 0.82 */
+    --text-soft: #98acc1; /* p 0.28, Y 0.40 */
+    --border: #2c3a47; /* p 0.45, Y 0.04 */
+    --rule: #455b70; /* p 0.50, Y 0.10 */
+    --accent: #00b2ff; /* p 1, Y 0.39: brightest displayable */
+    --accent-soft: #263a4c; /* p 0.60, Y 0.04 */
+    --footer-bg: #040e16; /* p 0.75, Y 0.004 */
   }
 }
 
@@ -128,7 +129,7 @@ p {
   margin: 0 0 1rem;
 }
 
-/* Links are text-coloured with a 490 nm underline. */
+/* Links are text-coloured with an accent-coloured underline. */
 a {
   color: var(--text);
   text-decoration: underline;
