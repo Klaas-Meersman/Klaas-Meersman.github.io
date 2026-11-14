@@ -213,6 +213,11 @@ main {
   grid-row: 1;
   min-width: 0;
 }
+/* Page titles are hidden (the nav shows where you are), so whatever comes
+   after them starts flush with the top of the profile card. */
+.content > .sr-only:first-child + * {
+  margin-top: 0;
+}
 .page-side {
   grid-column: 1;
   grid-row: 1;

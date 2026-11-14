@@ -20,11 +20,7 @@ const years = Object.keys(byYear)
   title="Publications"
   description="Publications by Klaas Meersman."
 >
-  <h1>Publications</h1>
-  <p class="muted">
-    See also my <a href={LINKS.kuleuven}>KU Leuven page</a>.
-  </p>
-
+  <h1 class="sr-only">Publications</h1>
   {
     years.map((year) => (
       <section>
@@ -70,9 +66,20 @@ const years = Object.keys(byYear)
       <p>No publications listed yet — add them in <code>src/data/publications.ts</code>.</p>
     )
   }
+
+  <p class="muted pubs-more">
+    See also my <a href={LINKS.kuleuven}>KU Leuven page</a>.
+  </p>
 </BaseLayout>
 
 <style>
+  /* The page now opens with the newest year, flush with the profile card. */
+  section:first-of-type > h2 {
+    margin-top: 0;
+  }
+  .pubs-more {
+    margin-top: 1.5rem;
+  }
   .pub {
     padding: 1rem 0;
     border-bottom: 1px solid var(--border);

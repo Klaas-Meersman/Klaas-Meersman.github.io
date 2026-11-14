@@ -35,7 +35,7 @@ const teaching = [
   title="Teaching"
   description="Teaching and student supervision by Klaas Meersman."
 >
-  <h1>Teaching</h1>
+  <h1 class="sr-only">Teaching</h1>
 
   <ul class="teach-list">
     {
@@ -82,6 +82,9 @@ const teaching = [
   .teach-list li {
     padding: 0.9rem 0;
     border-bottom: 1px solid var(--border);
+  }
+  .teach-list > li:first-child {
+    padding-top: 0;
   }
   .materials {
     display: flex;
